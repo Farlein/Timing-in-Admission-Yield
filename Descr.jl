@@ -340,8 +340,29 @@ Three years together
 Load raw chains
 ```
 
+raw_chain_2228 = CSV.read("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/chain_2228_20220819.csv", DataFrame)
+raw_chain_2218 = CSV.read("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/chain_2218_20220819.csv", DataFrame)
+raw_chain_2208 = CSV.read("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/chain_2208_20220819.csv", DataFrame)
 
+n_Period = 8
+n_var = 19
+n_σ = 2
+
+plot(reshape(transpose(Array(raw_chain_2208[1:n_Period,:])), :, 1), label = "Fall 2020", yaxis = ("β0"), legend=:topleft, alpha=0.2) 
+plot!(reshape(transpose(Array(raw_chain_2218[1:n_Period,:])), :, 1), label = "Fall 2021", alpha=0.2)
+display(plot!(reshape(transpose(Array(raw_chain_2228[1:n_Period,:])), :, 1), label = "Fall 2022", alpha=0.2))
+
+
+
+for i in 1:n_var
+    plot(reshape(transpose(Array(raw_chain_2208[(i*n_Period+1):(i*n_Period+n_Period),:])), :, 1), label = "Fall 2020", alpha=0.2)
+    plot!(reshape(transpose(Array(raw_chain_2218[(i*n_Period+1):(i*n_Period+n_Period),:])), :, 1), label = "Fall 2021", alpha=0.2)
+    display(plot!(reshape(transpose(Array(raw_chain_2228[(i*n_Period+1):(i*n_Period+n_Period),:])), :, 1), label = "Fall 2022", yaxis = var_name[i], legend=:topleft, alpha=0.2)) 
+ end
 ##############
 
 i_test = 10
 "β0_"*string(i_test)
+
+
+plot(reshape(transpose(Array(raw_chain_2218[1:n_Period,:])), :, 1), label = "Fall 2021")
