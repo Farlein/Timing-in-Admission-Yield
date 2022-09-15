@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>When They Will Pay: Understand Deposit Decisions in College Admission</title>
+  <style>
+    html {
+      line-height: 1.5;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 1em;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+      font-size: 85%;
+      margin: 0;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: 1;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">When They Will Pay: Understand Deposit Decisions in
+College Admission</h1>
+</header>
+<h2 id="introduction">Introduction</h2>
+<p>Motivation Recruitment of new students is a challenging task of
+enrollment management for many institutions of higher education, since
+they need to meet revenue goals, ensure academic ability and promote
+diversity of the student body <span class="citation"
+data-cites="adams2019higher maldonado2017assessing">(Adams-Johnson et
+al. 2019; Maldonado, Armelini, and Guevara 2017)</span>. The recruitment
+process includes several general stages, searching and answering
+inquries of propsective applicants, reviewing application materials and
+making admission decisions, encouraging admitted students to pay
+deposits, and assisting with students’ matriculation. This project
+focuses on the deposit stage where students’ choices play an important
+role. Understanding students’ decision to pay deposits can help
+institutions to design marketing and recruitment strategies <span
+class="citation"
+data-cites="desjardins2002analytic johnson2019destinations">(DesJardins
+2002; Johnson 2019)</span>.</p>
+<p>Summary of previous studies Previous studies have provided valuable
+insights on improving recruitment efforts by investigating various
+factors which could affect admission outcome. DesJardins <span
+class="citation" data-cites="desjardins2002analytic">(DesJardins
+2002)</span> used predictive models to segment students, so enrollment
+managers could focused on student groups of interest who have similar
+probabilities to enroll or not. Maldonado et al. <span class="citation"
+data-cites="maldonado2017assessing">(Maldonado, Armelini, and Guevara
+2017)</span> developed nested logit models to predict students’
+enrollment probabilities, and the decision makers utilized the models to
+allocate resources for admission activities. Goenner and Pauls <span
+class="citation" data-cites="goenner2006predictive">(Goenner and Pauls
+2006)</span> predicted the enrollment probabilities of inquirers to help
+University of North Dakota allocate recruitment efforts by geographic
+areas. Braunstein et al. <span class="citation"
+data-cites="braunstein1999measuring">(Braunstein, McGrath, and
+Pescatrice 1999)</span> focused on the factors related to student
+financials on enrollment decisions of admitted students, so the
+particular institution can understand the effects of various financial
+aids and how they affect students differently from various
+socio-economic backgrounds. Johnson <span class="citation"
+data-cites="johnson2019destinations">(Johnson 2019)</span> studied
+various factors associated with enrollment decisions of out-of-state
+students with multiple potential destinations and provided insights on
+why the students accepted their offer of admission or chose another
+instittion.</p>
+<p>Difference from previous studies The previous studies however made
+two implicit assumptions. One was all factors had time independent
+values, and the other was all factors had time independent effects.
+Indeed, many factors related to admission process are time independent,
+e.g., racial ethnicity and HS GPA, but others may easily violate the
+assumption, e.g., institutional financial aid offered and student loan
+borrowed. On the other hand, even time independent factors could have
+time varying effects. For example, Pell eligible students are more
+likely to pay deposit when they had to, i.e., when deposit deadline
+approaches, so Pell eligibility does not matter in the early admission
+season but is important later. As a result, the colleagues of the
+Admission Office want to understand not only whether a factor could
+affect students’ decisions, but also how the factor affect decisions in
+different time periods. Moreover, the Admission Office pay a lot of
+attention to deposit paid before considering about matriculating
+students, so it is useful to model students’ decision to pay deposit,
+rather than modeling enrollment decisions directly.</p>
+<p>Contribution of this study This study provides new insights in
+factors affecting admission outcome to help with recruitment efforts.
+First, we model students’ journey from being admitted to deciding to pay
+deposit. Event history analysis is used to model the admission journey,
+similar to those modeling students’ journey from matriculation to
+graduation <span class="citation"
+data-cites="gross2013financial zhan2018much chen2017effects">(Gross,
+Torres, and Zerquera 2013; Zhan, Xiang, and Elliott III 2018; Chen and
+Hossler 2017)</span>. However, instead of using the popular proportional
+hazard models, we developed stepwise exponential models to accommodate
+time varying factors and time varying effects. We further introduce
+Bayesian Hierarchical framework to event history analysis. The framework
+provides balance between overfitting and underfitting, so true
+time-varing effects are not exaggerated by noise in observed data or
+ignored by model assumptions. Second, we model deposit decisions instead
+of enrollment decisions. Although enrollment decision is the final
+outcome of interest, in practice the Admission Office need to work
+sequentially to encourage paying deposits and then to prevent withdrawal
+of deposits (which they call “summer melt”). They would like a tool to
+understand whether/how factors affect deposit decisions. Third, we
+include student activities as surrogates of students’ interests to the
+admission offers, in addition to the factors usually included in
+previous research such as demographic characteristics, socio-economic
+background, high school academic performance and student financials.
+More specifically, we investigate the effects of factors related to
+students’ activities on the admission websites and campus visits.</p>
+<p>Summary of results In this paper, we implement Bayesian hierarchical
+event history analysis</p>
+<h2 id="theoretical-backgound-and-pratical-application">Theoretical
+Backgound and Pratical Application</h2>
+<h3 id="admission-funnel">Admission Funnel</h3>
+<p>An admission funnel invovles six processes, prospects, inquiries,
+applicants, admits, deposits and enrolls <span class="citation"
+data-cites="stonybrook">(<strong>stonybrook?</strong>)</span>. In the
+prospect stage, the admission office search for high school students who
+might be interested to the institution. In the inquiry stage, the
+admission office communicate with students who expressed interest,
+attempt to furhter enhance their interest, and encourage them to apply.
+In the applicant stage, the admission office notify students with
+incomplete application forms, process and review completed applications.
+In the admit stage, the admission office make decisions to offer
+admission, put students on a wait list, or reject applications. In the
+deposit stage, the admission office prepare financial aid packages and
+collaborate with other offices to interact with admitted students in
+campus tours and other programs, in order to encourge the students to
+accept the offers. In the enroll stage, the admission office continue to
+engage with students and collaborate with other offices to help with new
+student orientation, course registration and on-campus residency. There
+are several important rates to monitor in the admission funnel,
+conversion rate, selection rate, yield rate and melt rate <span
+class="citation"
+data-cites="ruffalonl">(<strong>ruffalonl?</strong>)</span>. Conversion
+rate is The proportion of applicants from inquiries. Selection rate is
+the proportion of admits from applicants. Yield rate is the proportion
+of deposits from admits. Melt rate is the proportion of enrolls from
+deposits. With melt rate typically closed to 1 or 100% at the University
+of Delaware, the deposit stage or yield rate largely determines the
+number of new students we will have.</p>
+<h3 id="college-choice">College Choice</h3>
+<h3 id="conceptual-framework">Conceptual Framework</h3>
+<p>Our conceptual framework is developed from the theory of college
+choice <span class="citation"
+data-cites="chapman1979pricing hossler1989understanding">(Chapman 1979;
+Hossler, Braxton, and Coopersmith 1989)</span>. The studies tried to
+understand students’ enrollment decisions with their individual
+characteristics and preferences. Students decide whether to pay deposit,
+according to economic, sociological, and psychological factors <span
+class="citation" data-cites="paulsen1990college">(Paulsen 1990)</span>.
+Based on the theory of human capital <span class="citation"
+data-cites="becker2009human">(Becker 2009)</span>, the economic factors
+help students evaluate whether an institution provides the highest
+potential benefit versus cost. From sociological perspective, students
+choose the best institution for status attainment <span class="citation"
+data-cites="hossler1999going">(Hossler, Schmit, and Vesper 1999)</span>,
+and the choice is affect by their sociological background <span
+class="citation" data-cites="johnson2019destinations">(Johnson
+2019)</span>. The psychological factors impact students’ opinions on
+institutional environment and climate, and students decide whether it is
+a good fit to the institution <span class="citation"
+data-cites="paulsen1990college">(Paulsen 1990)</span>. We hypothesis
+that these factors not only affect students’ decision to pay deposit,
+but also when they would like to pay deposit, i.e., these factors could
+also affect students’ speed to make decisions. For admitted students,
+they are willing to pay deposits sooner than later if they are admitted
+to an institution with the best potential investment, status attainment,
+and/or student-institution fit.</p>
+<p>With the guidance of the college choice theory and previous studies,
+we form the variable pool to reflect the three kinds of factors. The
+economic factors include institutional financial aid offered, Pell
+eligibility, expected family contribution (EFC), and time spent on
+student finance service (SFS) websites. Financial aids affect students’
+choice by reducing the cost of attendence. The grants and scholarships
+can be from federal, state or institution. We do not include federal
+grants, because few students obtained federal grants by the end of
+deposit deadline. We do not include state scholarships, because they do
+not apply to non-Delawarean students. Pell eligibility is a good
+indicator for federal grants, because most Pell eligible students
+eventually obtain the federal Pell grants. In addition, both Pell
+eligibility and EFC indicate students’ sensitivity to cost and financial
+aids. The time spent on SFS websites reflects students’ efforts to
+evaludate the economic impact to attend the institution. The
+sociological factors include gender and ethnicity. The psychological
+factors include the period to receive admission offer, whether admitted
+to the Honor College, whether applied major and admitted major are
+different, loan borrowed, time spent on major finder websites, whether
+attended recruitment events, and whether postpone to review admission
+decision.</p>
+<h2 id="data-and-variables">Data and Variables</h2>
+<p>Admit, deposit and yield trend Data for this study were pulled from a
+data reporting platform of the University of Delaware (UD), a public
+research university (Carnegie classification: R1) with a population of
+about 18,000 undergraduate students. We collected the weekly admission
+data of out-of-state applicants between late February and early May from
+Fall 2012 to Fall 2019. We chose late February as the starting point,
+because most admission decisions were made by the Admission Office by
+then and the Budget Office began to review the budget plan for the
+coming fiscal year. Most students paid deposit in early May if they
+accepted UD’s offer, so we used it as the end point. Table 1 shows the
+number of admits and deposits by May 1 of each year. The number of
+admitted out-of-state students gradually increased from about 12,500 to
+about 15,000 from 2012 to 2019, and the number of deposited out-of-state
+students fluctuated between 2200 and 2900. Figure 1 shows yield by week
+for Fall 2017, Fall 2018 and Fall 2019. Week 11 always represents May 1,
+and Week 1 represents 70 days before May 1, which is in late Feburary.
+For all three falls, the yields increase slowly in early weeks in
+February and March, increase faster in April, and jump in the last week
+of April. The yield trends are more similar between Fall 2017 and Fall
+2018, and the gap is larger between the trends of Fall 2018 and Fall
+2019. Overall the sequence of week is a strong predictor for yield, and
+thus is used as an independent variable in the models.</p>
+<p>Student attributes In addition to the sequence of week, student
+attributes are also included in the initial list of variables to predict
+yields. Table 2 describes the dependent and indepent variables in the
+models, and Table 3 shows the descriptive statistics of the variables.
+The depedent variable is whether a student will pay deposit. The
+independent variables include the student’s demographic information,
+high school information, financial background, financial aid
+information. We further include interaction between financial aid and
+some other variables such as the interaction between institutional aid
+rate and estimated family contrbution (EFC) rate, because we suspect the
+effect of institutional aid rate can be affected by other variables.</p>
+<h2 id="variable-selection">Variable Selection</h2>
+<p>From the initial list of predictors, we select a subset with
+consistently high predictive powers and use them as input of the
+subsequent models. First, we randomly draw samples with replacement from
+a fall’s data with date being May 1. Second, we fit LASSO regression to
+predict yield and record which variables are selected and the
+correpsonding coefficients. Third, we repeat the previous two steps 200
+times, so we can calculate the probability of each variable being
+selected for the fall. The higher the probability is, the higher
+predictive power a variable has. Fourth, we repeat the previous three
+steps for each fall, so we know which variables tend to have high
+predictive powers over years. We select Yield from major, HS GPA, Feeder
+HS, Institutional aid rate, EFC rate, African American, Asian, White,
+and Inst*EFC. Fifth, we exclude variables with high variance of
+coefficients. Even a variable is selected for each fall, the high
+variance of coefficient indicates the predictive power is not
+consistent, so it will hurt the predictive performance when a trained
+model is applied to a test dataset. In this case, we calculate the
+average coefficients for selected variables from last step for each
+fall, and the calculate the standard deviation of the average
+coefficients. All variables show relatively small standard deviation
+except Yield from major which has standard deviation larger than 1, so
+we exclude Yield from major. Therefore, the final list of predictors are
+HS GPA, Feeder HS, Institutional aid rate, EFC rate, African American,
+Asian, White, and Inst*EFC.</p>
+<h2 id="statistical-model">Statistical Model</h2>
+<p>The statistical model is a combination of an expential survival model
+and a logistic regression model. Equations (1) to (3) describe the prior
+distribution of unknown coefficients <span
+class="math inline"><em>α</em><sub><em>t</em></sub></span>, <span
+class="math inline"><em>β</em><sub><em>t</em></sub></span> and <span
+class="math inline"><em>β</em><sub><em>j</em></sub></span>, where <span
+class="math inline"><em>j</em></span> is from 1 to 8.</p>
+<p><span
+class="math display"><em>α</em><sub><em>t</em></sub> ∼ Normal(<em>μ</em><sub><em>α</em></sub>,<em>σ</em><sub><em>α</em></sub>)</span>
+(1) <span
+class="math display"><em>β</em><sub><em>t</em></sub> ∼ Normal(<em>μ</em><sub><em>β</em></sub>,<em>σ</em><sub><em>β</em></sub>)</span>
+(2) <span
+class="math display"><em>β</em><sub><em>j</em></sub> ∼ Normal(<em>μ</em><sub><em>j</em></sub>,<em>σ</em><sub><em>j</em></sub>)</span>
+(3) <span
+class="math display"><em>θ</em><sub><em>i</em></sub> = <em>e</em><em>x</em><em>p</em>(<em>β</em><sub><em>t</em></sub>*(<em>w</em><em>e</em><em>e</em><em>k</em><sub><em>i</em></sub>−<em>α</em><sub><em>t</em></sub>)) * (1/(1+<em>e</em><em>x</em><em>p</em>(−<em>Σ</em><sub><em>j</em></sub>(<em>β</em><sub><em>j</em></sub>*<em>X</em><sub><em>i</em><em>j</em></sub>))))</span>
+(4) <span
+class="math display"><em>y</em><sub><em>i</em></sub> ∼ Bernoulli(<em>θ</em><sub><em>i</em></sub>)</span>
+(5)</p>
+<h2 class="unnumbered" id="reference">Reference</h2>
+<div id="refs" class="references csl-bib-body hanging-indent"
+role="doc-bibliography">
+<div id="ref-adams2019higher" class="csl-entry" role="doc-biblioentry">
+Adams-Johnson, Susan, Jeff Cranmore, Anna MJ Holloway, and Joel D Wiley.
+2019. <span>“Higher Education Recruitment in the United States: A
+Chronology of Significant Literature.”</span> <em>Journal of Educational
+Administration and History</em> 51 (3): 213–38.
+</div>
+<div id="ref-becker2009human" class="csl-entry" role="doc-biblioentry">
+Becker, Gary S. 2009. <em>Human Capital: A Theoretical and Empirical
+Analysis, with Special Reference to Education</em>. University of
+Chicago press.
+</div>
+<div id="ref-braunstein1999measuring" class="csl-entry"
+role="doc-biblioentry">
+Braunstein, Andrew, Michael McGrath, and Donn Pescatrice. 1999.
+<span>“Measuring the Impact of Income and Financial Aid Offers on
+College Enrollment Decisions.”</span> <em>Research in Higher
+Education</em> 40 (3): 247–59.
+</div>
+<div id="ref-chapman1979pricing" class="csl-entry"
+role="doc-biblioentry">
+Chapman, Randall G. 1979. <span>“Pricing Policy and the College Choice
+Process.”</span> <em>Research in Higher Education</em> 10 (1): 37–57.
+</div>
+<div id="ref-chen2017effects" class="csl-entry" role="doc-biblioentry">
+Chen, Jin, and Don Hossler. 2017. <span>“The Effects of Financial Aid on
+College Success of Two-Year Beginning Nontraditional Students.”</span>
+<em>Research in Higher Education</em> 58 (1): 40–76.
+</div>
+<div id="ref-desjardins2002analytic" class="csl-entry"
+role="doc-biblioentry">
+DesJardins, Stephen L. 2002. <span>“An Analytic Strategy to Assist
+Institutional Recruitment and Marketing Efforts.”</span> <em>Research in
+Higher Education</em> 43 (5): 531–53.
+</div>
+<div id="ref-goenner2006predictive" class="csl-entry"
+role="doc-biblioentry">
+Goenner, Cullen F, and Kenton Pauls. 2006. <span>“A Predictive Model of
+Inquiry to Enrollment.”</span> <em>Research in Higher Education</em> 47
+(8): 935–56.
+</div>
+<div id="ref-gross2013financial" class="csl-entry"
+role="doc-biblioentry">
+Gross, Jacob PK, Vasti Torres, and Desiree Zerquera. 2013.
+<span>“Financial Aid and Attainment Among Students in a State with
+Changing Demographics.”</span> <em>Research in Higher Education</em> 54
+(4): 383–406.
+</div>
+<div id="ref-hossler1989understanding" class="csl-entry"
+role="doc-biblioentry">
+Hossler, Don, John Braxton, and Georgia Coopersmith. 1989.
+<span>“Understanding Student College Choice.”</span> <em>Higher
+Education: Handbook of Theory and Research</em> 5: 231–88.
+</div>
+<div id="ref-hossler1999going" class="csl-entry" role="doc-biblioentry">
+Hossler, Don, Jack Schmit, and Nick Vesper. 1999. <em>Going to College:
+How Social, Economic, and Educational Factors Influence the Decisions
+Students Make</em>. JHU Press.
+</div>
+<div id="ref-johnson2019destinations" class="csl-entry"
+role="doc-biblioentry">
+Johnson, Iryna Y. 2019. <span>“Destinations of Admitted Out-of-State
+Students: A Case of One Institution.”</span> <em>Research in Higher
+Education</em> 60 (3): 315–37.
+</div>
+<div id="ref-maldonado2017assessing" class="csl-entry"
+role="doc-biblioentry">
+Maldonado, Sebastián, Guillermo Armelini, and C Angelo Guevara. 2017.
+<span>“Assessing University Enrollment and Admission Efforts via
+Hierarchical Classification and Feature Selection.”</span>
+<em>Intelligent Data Analysis</em> 21 (4): 945–62.
+</div>
+<div id="ref-paulsen1990college" class="csl-entry"
+role="doc-biblioentry">
+Paulsen, Michael B. 1990. <em>College Choice: Understanding Student
+Enrollment Behavior. ASHE-ERIC Higher Education Report No. 6.</em> ERIC.
+</div>
+<div id="ref-zhan2018much" class="csl-entry" role="doc-biblioentry">
+Zhan, Min, Xiaoling Xiang, and William Elliott III. 2018. <span>“How
+Much Is Too Much: Educational Loans and College Graduation.”</span>
+<em>Educational Policy</em> 32 (7): 993–1017.
+</div>
+</div>
+</body>
+</html>
