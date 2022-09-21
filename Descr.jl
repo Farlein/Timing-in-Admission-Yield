@@ -282,6 +282,7 @@ display(β_fit)
 
 var_name = ["β_Admit", "β_hs_gpa", "β_Admit_Honor", "β_Diff_Major", "β_Gender", "β_inst_grant", "β_loan", "β_fed_efc", "β_Pell", 
             "β_ASIAN", "β_BLACK", "β_HISPA", "β_WHITE", "β_Multi", "β_Major_Finder", "β_SFS", "β_Blue_Gold", "β_Early_Event", "β_Delay_Review"]
+
 print(hcat(Vector(1:n_var), var_name))
 
 display(plot(reshape(transpose(Array(raw_chain[1:n_Period,:])), :, 1), label = "", yaxis = ("β0"), legend=:topleft))
@@ -305,7 +306,13 @@ for i in 1:n_σ
     display(plot(reshape(transpose(Array(raw_chain[(n_var*n_Period+n_Period+n_var+i),:])), :, 1), label = "", yaxis = σ_name[i], legend=:topleft)) 
 end
 
-### Interaction Plot
+
+
+```
+
+Draw Interaction Plots
+
+```
 
 plot(reshape(transpose(Array(raw_chain[(6*n_Period+1):(6*n_Period+n_Period),:])), :, 1), reshape(transpose(Array(raw_chain[(7*n_Period+1):(7*n_Period+n_Period),:])), :, 1))
 
