@@ -42,26 +42,29 @@ The psychological factors reflect students' desire to attend the institution [@p
 
 
 ## Data and Variables
-Admit, deposit and yield trend
-The study institution, University of Delaware (UD), is a public research university (Carnegie classification: R1) with a population of about 18,000 undergraduate students. The Admission Office of provided the data in this study. We track the deposit decisions of admitted out-of-state applicants between February 1 and May 1 who intended to matriculate as first-time first-year students in Fall 2020, Fall 2021 and Fall 2022. We choose February 1 as the starting point, because most admission decisions are made by the Admission Office by then. May 1 is the deadline to pay deposits, so we use it as the end point. We divide the three month into eight periods, Feburary, March 1 to March 15, March 16 to March 31, April 1 to April 7, April 8 to April 14, April 15 to April 21, April 22 to April 27, and April 28 to May 1. Table 1 shows the number of admits and deposits by period each year. The number of admitted out-of-state students gradually increased from about 12,500 to about 15,000 from 2012 to 2019, and the number of deposited out-of-state students fluctuated between 2200 and 2900. Figure 1 shows yield by week for Fall 2017, Fall 2018 and Fall 2019. Week 11 always represents May 1, and Week 1 represents 70 days before May 1, which is in late Feburary. For all three falls, the yields increase slowly in early weeks in February and March, increase faster in April, and jump in the last week of April. The yield trends are more similar between Fall 2017 and Fall 2018, and the gap is larger between the trends of Fall 2018 and Fall 2019. Overall the sequence of week is a strong predictor for yield, and thus is used as an independent variable in the models. 
+Deposits by period each year
+The study institution, University of Delaware (UD), is a public research university (Carnegie classification: R1) with a population of about 18,000 undergraduate students. The Admission Office of provided the admission data for applicants who intended to matriculate as first-time first-year students in Fall 2020, Fall 2021 and Fall 2022. We track the deposit decisions of admitted out-of-state students from February 1 to the deposit day or May 1 (deposit deadline). We use February 1 as the starting point, because the Admission Office has made most admission decisions by then. We divide the three months into eight periods, February, March 1 to March 15, March 16 to March 31, April 1 to April 7, April 8 to April 14, April 15 to April 21, April 22 to April 28, and April 29 to May 1. Table 1 shows the number of admits and deposits by period each year. For each year, the number of observations increases from period 1 to period 3 or period 4, because some applicants were admitted after February. The number of observations decreases afterwards, because we stop to track applicants who paid deposits. The numbers of deposits increase in April, especially after April 21, indicating the deadline effect on students' deposit decisions.  
 
-|	    |2020		    |2021		    |2022	        |
-|Period	|Admit	|Deposit|Admit	|Deposit|Admit	|Deposit|
-|1	    |15866	|308	|17785	|226	|18019	|263    |
-|2	    |16457	|247	|18330	|173	|18736	|241    |
-|3	    |16673	|378	|19257	|381	|19304	|385    |
-|4	    |16385	|303	|19110	|357	|19465	|316    |
-|5	    |16112	|384	|18891	|434	|19289	|454    |
-|6	    |15779	|416	|18459	|550	|18839	|461    |
-|7	    |15739	|620	|17983	|757	|18412	|962    |
-|8	    |15129	|481	|17226	|576	|17467	|685    |
+Table 1. Numbers of Observations and Deposits by Period Each Year
+|	    |2020	|	    |2021	|	    |2022	|       |
+| ------| ------|-------|-------|-------|-------|-------|
+|Period	|N	    |Deposit|N	    |Deposit|N	    |Deposit|
+|1 - February	                |15866	|308	|17785	|226	|18019	|263    |
+|2 - March 1 to March 15	    |16457	|247	|18330	|173	|18736	|241    |
+|3 - March 16 to March 31	    |16673	|378	|19257	|381	|19304	|385    |
+|4 - April 1 to April 7	        |16385	|303	|19110	|357	|19465	|316    |
+|5 - April 8 to April 14	    |16112	|384	|18891	|434	|19289	|454    |
+|6 - April 15 to April 21	    |15779	|416	|18459	|550	|18839	|461    |
+|7 - April 22 to April 28	    |15739	|620	|17983	|757	|18412	|962    |
+|8 - April 29 to May 1	        |15129	|481	|17226	|576	|17467	|685    |
 
 
 Student attributes
-In addition to the sequence of week, student attributes are also included in the initial list of variables to predict yields. Table 2 describes the dependent and indepent variables in the models, and Table 3 shows the descriptive statistics of the variables. The depedent variable is whether a student will pay deposit. The independent variables include the student's demographic information, high school information, financial background, financial aid information. We further include interaction between financial aid and some other variables such as the interaction between institutional aid rate and estimated family contrbution (EFC) rate, because we suspect the effect of institutional aid rate can be affected by other variables. 
+Table 2 describes the dependent and independent variables in the models, and Table 3 shows the descriptive statistics of the independent variables. The depedent variable is whether a student paid deposit by May 1. The independent variables include the the economic factors, sociological factors and psychological factors listed in the concepture framework.  
 
-## Variable Selection
-From the initial list of predictors, we select a subset with consistently high predictive powers and use them as input of the subsequent models. First, we randomly draw samples with replacement from a fall's data with date being May 1. Second, we fit LASSO regression to predict yield and record which variables are selected and the correpsonding coefficients. Third, we repeat the previous two steps 200 times, so we can calculate the probability of each variable being selected for the fall. The higher the probability is, the higher predictive power a variable has. Fourth, we repeat the previous three steps for each fall, so we know which variables tend to have high predictive powers over years. We select Yield from major, HS GPA, Feeder HS, Institutional aid rate, EFC rate, African American, Asian, White, and Inst\*EFC. Fifth, we exclude variables with high variance of coefficients. Even a variable is selected for each fall, the high variance of coefficient indicates the predictive power is not consistent, so it will hurt the predictive performance when a trained model is applied to a test dataset. In this case, we calculate the average coefficients for selected variables from last step for each fall, and the calculate the standard deviation of the average coefficients. All variables show relatively small standard deviation except Yield from major which has standard deviation larger than 1, so we exclude Yield from major. Therefore, the final list of predictors are HS GPA, Feeder HS, Institutional aid rate, EFC rate, African American, Asian, White, and Inst\*EFC.
+[Insert Table 2 Here]
+
+
 
 ## Statistical Model
 The statistical model is a combination of an expential survival model and a logistic regression model. Equations (1) to (3) describe the prior distribution of unknown coefficients $\alpha_t$, $\beta_t$ and $\beta_j$, where $j$ is from 1 to 8. 

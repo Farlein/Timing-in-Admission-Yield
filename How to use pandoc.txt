@@ -1,0 +1,9 @@
+Open Windows PowerShell
+
+cd "H:\My Drive\FSAN\5_Adm Yield Proj\Manuscript"
+cd "C:\DATA\FSAN\Adm_Yield\Manuscript\Timing-in-Admission-Yield\Timing-in-Admission-Yield"
+
+pandoc --citeproc Manuscript_20220818.md -f markdown -t docx -s -o Manuscript_20220818.docx
+pandoc --citeproc Manuscript.md -f markdown -t docx -s -o Manuscript.docx
+pandoc --citeproc Manuscript.md -f markdown -t html -s -o Manuscript.html
+pandoc --citeproc Manuscript.md -f markdown -t pdf -s -o Manuscript.pdf
