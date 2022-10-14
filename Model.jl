@@ -36,9 +36,9 @@ Load raw data
 ```
 
 ###
-#raw = CSV.read("H:/My Drive/FSAN/5_Adm Yield Proj/Data/for_julia_2208_20220816.csv", DataFrame)
-raw = CSV.read("H:/My Drive/FSAN/5_Adm Yield Proj/Data/for_julia_2218_20220816.csv", DataFrame)
-#raw = CSV.read("H:/My Drive/FSAN/5_Adm Yield Proj/Data/for_julia_2228_20220816.csv", DataFrame)
+raw = CSV.read("C:/Users/chuanc/University of Delaware - o365/Team-IRE-Staff Shares - chuanc - chuanc/Project/02_Analytical/20200102 ADM_Yield/Data/for_julia_2208_20220816.csv", DataFrame)
+raw = CSV.read("C:/Users/chuanc/University of Delaware - o365/Team-IRE-Staff Shares - chuanc - chuanc/Project/02_Analytical/20200102 ADM_Yield/Data/for_julia_2218_20220816.csv", DataFrame)
+raw = CSV.read("C:/Users/chuanc/University of Delaware - o365/Team-IRE-Staff Shares - chuanc - chuanc/Project/02_Analytical/20200102 ADM_Yield/Data/for_julia_2228_20220816.csv", DataFrame)
 
 #raw = CSV.read("H:/My Drive/FSAN/5_Adm Yield Proj/Data/for_julia_2228_20220615.csv", DataFrame)
 
