@@ -19,16 +19,15 @@ using DataFrames
 
 using FreqTables, StatsBase
 
-# using JuMP, Ipopt
+#using JuMP, Ipopt
 
 
 using TransformVariables, LogDensityProblems, DynamicHMC, DynamicHMC.Diagnostics
 using MCMCDiagnostics
 using Parameters, Statistics
-import ForwardDiff  
-import ReverseDiff
+#import ForwardDiff  
+#import ReverseDiff
 import Zygote
-
 
 ```
 Load raw data
@@ -36,9 +35,9 @@ Load raw data
 ```
 
 ###
-raw = CSV.read("C:/Users/chuanc/University of Delaware - o365/Team-IRE-Staff Shares - chuanc - chuanc/Project/02_Analytical/20200102 ADM_Yield/Data/for_julia_2208_20220816.csv", DataFrame)
-raw = CSV.read("C:/Users/chuanc/University of Delaware - o365/Team-IRE-Staff Shares - chuanc - chuanc/Project/02_Analytical/20200102 ADM_Yield/Data/for_julia_2218_20220816.csv", DataFrame)
-raw = CSV.read("C:/Users/chuanc/University of Delaware - o365/Team-IRE-Staff Shares - chuanc - chuanc/Project/02_Analytical/20200102 ADM_Yield/Data/for_julia_2228_20220816.csv", DataFrame)
+raw = CSV.read("C:/Users/chuanc/University of Delaware - o365/Team-IRE-Staff Shares - chuanc - chuanc/Project/02_Analytical/20200102 ADM_Yield/Data/for_julia_2208_20221027.csv", DataFrame)
+#raw = CSV.read("C:/Users/chuanc/University of Delaware - o365/Team-IRE-Staff Shares - chuanc - chuanc/Project/02_Analytical/20200102 ADM_Yield/Data/for_julia_2218_20220816.csv", DataFrame)
+#raw = CSV.read("C:/Users/chuanc/University of Delaware - o365/Team-IRE-Staff Shares - chuanc - chuanc/Project/02_Analytical/20200102 ADM_Yield/Data/for_julia_2228_20220816.csv", DataFrame)
 
 #raw = CSV.read("H:/My Drive/FSAN/5_Adm Yield Proj/Data/for_julia_2228_20220615.csv", DataFrame)
 
@@ -84,6 +83,7 @@ unique(data_fit.Period)
 n_Period = 8
 n_fit = size(data_fit)[1]
 
+#=
 data_fit.Delay_Review_Ind = zeros(nrow(data_fit))
 for i in eachindex(data_fit.Delay_Review_Decision)
     if data_fit.Delay_Review_Decision[i] >= 2
@@ -91,6 +91,7 @@ for i in eachindex(data_fit.Delay_Review_Decision)
         else data_fit.Delay_Review_Ind[i] = 0
     end
 end
+=#
 
 maximum(data_fit.Delay_Review_Ind)
 minimum(data_fit.Delay_Review_Ind)
@@ -111,14 +112,25 @@ function cc_standardize(var_seq, var_name)
     var_name
 end
 
+print(hcat(1:38, names(data_fit)))
 
+#=
 hs_gpa_std = []
 hs_gpa_std = cc_standardize(10, hs_gpa_std)
 rename!(hs_gpa_std,:x1 => :hs_gpa_std)
 data_fit = innerjoin(data_fit, hs_gpa_std, on = [:Student_ID => :Student_ID, :Period => :Period])
 combine(groupby(data_fit, :Period), :hs_gpa_std => mean)
 combine(groupby(data_fit, :Period), :hs_gpa_std => std)
+=#
 
+home_distance_std = []
+home_distance_std = cc_standardize(11, home_distance_std)
+rename!(home_distance_std,:x1 => :home_distance_std)
+data_fit = innerjoin(data_fit, home_distance_std, on = [:Student_ID => :Student_ID, :Period => :Period])
+combine(groupby(data_fit, :Period), :home_distance_std => mean)
+combine(groupby(data_fit, :Period), :home_distance_std => std)
+
+#=
 major_finder_std = []
 major_finder_std = cc_standardize(16, major_finder_std)
 rename!(major_finder_std,:x1 => :major_finder_std)
@@ -132,7 +144,9 @@ rename!(SFS_std,:x1 => :SFS_std)
 data_fit = innerjoin(data_fit, SFS_std, on = [:Student_ID => :Student_ID, :Period => :Period])
 combine(groupby(data_fit, :Period), :SFS_std => mean)
 combine(groupby(data_fit, :Period), :SFS_std => std)
+=#
 
+#=
 mean(data_fit.Diff_inst_grant_rate)
 std(data_fit.Diff_inst_grant_rate)
 diff_grant_std = []
@@ -141,7 +155,7 @@ rename!(diff_grant_std,:x1 => :diff_grant_std)
 data_fit = innerjoin(data_fit, diff_grant_std, on = [:Student_ID => :Student_ID, :Period => :Period])
 combine(groupby(data_fit, :Period), :diff_grant_std => mean)
 combine(groupby(data_fit, :Period), :diff_grant_std => std)
-
+=#
 
 
 ###############################
@@ -160,7 +174,7 @@ u = 10 .* ones(n_Period)
 @variable(surv_fit, l[i] <= β0[i = 1:n_Period] <= u[i])
 #@variable(surv_fit, β0[i = 1:n_Period] )
 
-n_var = 19
+n_var = 20
 l_β = -10 .* ones(n_var)  
 u_β = 10 .* ones(n_var)  
 @variable(surv_fit, l_β[i] <= β[i = 1:n_var] <= u_β[i])
@@ -169,7 +183,7 @@ u_β = 10 .* ones(n_var)
     surv_fit,
     Xβ[i = 1:n_fit], β0[data_fit.Period[i]] 
                         + β[1] * data_fit.Admit_Ind[i]
-                        + β[2] * data_fit.hs_gpa_std[i]
+                        + β[2] * data_fit.home_distance_std[i]
                         + β[3] * data_fit.Admit_Honor_Ind[i]
                         + β[4] * data_fit.Diff_Major_Ind[i]
                         + β[5] * data_fit.Gender_Ind[i]
@@ -182,11 +196,12 @@ u_β = 10 .* ones(n_var)
                         + β[12] * data_fit.Eth_HISPA_Ind[i]
                         + β[13] * data_fit.Eth_WHITE_Ind[i]
                         + β[14] * data_fit.Eth_Multi_Ind[i]
-                        + β[15] * data_fit.major_finder_std[i]
-                        + β[16] * data_fit.SFS_std[i]
-                        + β[17] * data_fit.Blue_Gold_Ind[i]
-                        + β[18] * data_fit.Early_Event_Ind[i]
-                        + β[19] * data_fit.Delay_Review_Ind[i]
+                        + β[15] * data_fit.Postcard_Ind[i]
+                        + β[16] * data_fit.Pros_Event_Ind[i]
+                        + β[17] * data_fit.CampusTour_Ever_Ind[i]
+                        + β[18] * data_fit.DecisionDay_Ever_Ind[i]
+                        + β[19] * data_fit.Financing_Started[i]
+                        + β[20] * data_fit.FinAid_Started[i]
 
     )
 
@@ -229,10 +244,12 @@ value.(β)
 
 print(value.(β0))
 
+
+
 para_df = DataFrame(
     β0 = value.(β0)
     , β_Admit = value.(β)[1]
-    , β_hs_gpa = value.(β)[2]
+    , β_home_distance = value.(β)[2]
     , β_Admit_Honor = value.(β)[3]
     , β_Diff_Major = value.(β)[4]
     , β_Gender = value.(β)[5]
@@ -245,16 +262,17 @@ para_df = DataFrame(
     , β_HISPA = value.(β)[12]
     , β_WHITE = value.(β)[13]
     , β_Multi = value.(β)[14]
-    , β_Major_Finder = value.(β)[15]
-    , β_SFS = value.(β)[16]
-    , β_Blue_Gold = value.(β)[17]
-    , β_Early_Event = value.(β)[18]
-    , β_Delay_Review = value.(β)[19]
+    , β_Postcard = value.(β)[15]
+    , β_Pros_Event = value.(β)[16]
+    , β_CampusTour = value.(β)[17]
+    , β_DecisionDay = value.(β)[18]
+    , β_Financing = value.(β)[19]
+    , β_FinAid = value.(β)[20]
 )
 
 print(para_df)
 #CSV.write("H:/My Drive/FSAN/5_Adm Yield Proj/results/para_2208_Adm_Bio_20220628.csv", para_df)
-#CSV.write("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/para_2208_high_20220817.csv", para_df)
+#CSV.write("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/para_2208_high_20221028.csv", para_df)
 
 # para_df = CSV.read("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/para_2208_Baseline_20220628.csv", DataFrame)
 
@@ -286,7 +304,7 @@ print(para_df)
 
 Xβ_fit = (β0_fit[data_fit.Period] 
 .+ β_fit[1] .* data_fit.Admit_Ind
-.+ β_fit[2] .* data_fit.hs_gpa_std
+.+ β_fit[2] .* data_fit.home_distance_std
 .+ β_fit[3] .* data_fit.Admit_Honor_Ind
 .+ β_fit[4] .* data_fit.Diff_Major_Ind
 .+ β_fit[5] .* data_fit.Gender_Ind
@@ -299,11 +317,12 @@ Xβ_fit = (β0_fit[data_fit.Period]
 .+ β_fit[12] .* data_fit.Eth_HISPA_Ind
 .+ β_fit[13] .* data_fit.Eth_WHITE_Ind
 .+ β_fit[14] .* data_fit.Eth_Multi_Ind
-.+ β_fit[15] .* data_fit.major_finder_std
-.+ β_fit[16] .* data_fit.SFS_std
-.+ β_fit[17] .* data_fit.Blue_Gold_Ind
-.+ β_fit[18] .* data_fit.Early_Event_Ind
-.+ β_fit[19] .* data_fit.Delay_Review_Ind
+.+ β_fit[15] .* data_fit.Postcard_Ind
+.+ β_fit[16] .* data_fit.Pros_Event_Ind
+.+ β_fit[17] .* data_fit.CampusTour_Ever_Ind
+.+ β_fit[18] .* data_fit.DecisionDay_Ever_Ind
+.+ β_fit[19] .* data_fit.Financing_Started
+.+ β_fit[20] .* data_fit.FinAid_Started
 
 )
 
@@ -345,7 +364,7 @@ u = 10 .* ones(n_Period)
 @variable(surv_fit, l[i] <= β0[i = 1:n_Period] <= u[i])
 #@variable(surv_fit, β0[i = 1:n_Period] )
 
-n_var = 19
+n_var = 20
 l_β = -10 .* ones(n_var)  
 u_β = 10 .* ones(n_var)  
 @variable(surv_fit, l_β[i] <= β[i = 1:n_Period, 1:n_var] <= u_β[i])
@@ -354,7 +373,7 @@ u_β = 10 .* ones(n_var)
     surv_fit,
     Xβ[i = 1:n_fit], β0[data_fit.Period[i]] 
                         + β[data_fit.Period[i],1] * data_fit.Admit_Ind[i]
-                        + β[data_fit.Period[i],2] * data_fit.hs_gpa_std[i]
+                        + β[data_fit.Period[i],2] * data_fit.home_distance_std[i]
                         + β[data_fit.Period[i],3] * data_fit.Admit_Honor_Ind[i]
                         + β[data_fit.Period[i],4] * data_fit.Diff_Major_Ind[i]
                         + β[data_fit.Period[i],5] * data_fit.Gender_Ind[i]
@@ -367,11 +386,12 @@ u_β = 10 .* ones(n_var)
                         + β[data_fit.Period[i],12] * data_fit.Eth_HISPA_Ind[i]
                         + β[data_fit.Period[i],13] * data_fit.Eth_WHITE_Ind[i]
                         + β[data_fit.Period[i],14] * data_fit.Eth_Multi_Ind[i]
-                        + β[data_fit.Period[i],15] * data_fit.major_finder_std[i]
-                        + β[data_fit.Period[i],16] * data_fit.SFS_std[i]
-                        + β[data_fit.Period[i],17] * data_fit.Blue_Gold_Ind[i]
-                        + β[data_fit.Period[i],18] * data_fit.Early_Event_Ind[i]
-                        + β[data_fit.Period[i],19] * data_fit.Delay_Review_Ind[i]
+                        + β[data_fit.Period[i],15] * data_fit.Postcard_Ind[i]
+                        + β[data_fit.Period[i],16] * data_fit.Pros_Event_Ind[i]
+                        + β[data_fit.Period[i],17] * data_fit.CampusTour_Ever_Ind[i]
+                        + β[data_fit.Period[i],18] * data_fit.DecisionDay_Ever_Ind[i]
+                        + β[data_fit.Period[i],19] * data_fit.Financing_Started[i]
+                        + β[data_fit.Period[i],20] * data_fit.FinAid_Started[i]
 
     )
 
@@ -414,10 +434,13 @@ value.(β)
 
 print(value.(β0))
 
+
+
+
 para_df = DataFrame(
     β0 = value.(β0)
     , β_Admit = value.(β)[:,1]
-    , β_hs_gpa = value.(β)[:,2]
+    , β_home_distance = value.(β)[:,2]
     , β_Admit_Honor = value.(β)[:,3]
     , β_Diff_Major = value.(β)[:,4]
     , β_Gender = value.(β)[:,5]
@@ -430,16 +453,17 @@ para_df = DataFrame(
     , β_HISPA = value.(β)[:,12]
     , β_WHITE = value.(β)[:,13]
     , β_Multi = value.(β)[:,14]
-    , β_Major_Finder = value.(β)[:,15]
-    , β_SFS = value.(β)[:,16]
-    , β_Blue_Gold = value.(β)[:,17]
-    , β_Early_Event = value.(β)[:,18]
-    , β_Delay_Review = value.(β)[:,19]
+    , β_Postcard = value.(β)[:,15]
+    , β_Pros_Event = value.(β)[:,16]
+    , β_CampusTour = value.(β)[:,17]
+    , β_DecisionDay = value.(β)[:,18]
+    , β_Financing = value.(β)[:,19]
+    , β_FinAid = value.(β)[:,20]
 )
 
 print(para_df)
 #CSV.write("H:/My Drive/FSAN/5_Adm Yield Proj/results/para_2208_Adm_Bio_20220628.csv", para_df)
-#CSV.write("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/para_2208_20220817.csv", para_df)
+#CSV.write("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/para_2208_20221028.csv", para_df)
 
 # para_df = CSV.read("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/para_2208_Baseline_20220628.csv", DataFrame)
 
@@ -469,9 +493,11 @@ print(para_df)
                         + β[data_fit.Period[i],19] * data_fit.Delay_Review_Ind[i]
 =#
 
+
+
 Xβ_fit = (β0_fit[data_fit.Period] 
 .+ β_fit[data_fit.Period,1] .* data_fit.Admit_Ind
-.+ β_fit[data_fit.Period,2] .* data_fit.hs_gpa_std
+.+ β_fit[data_fit.Period,2] .* data_fit.home_distance_std
 .+ β_fit[data_fit.Period,3] .* data_fit.Admit_Honor_Ind
 .+ β_fit[data_fit.Period,4] .* data_fit.Diff_Major_Ind
 .+ β_fit[data_fit.Period,5] .* data_fit.Gender_Ind
@@ -484,11 +510,12 @@ Xβ_fit = (β0_fit[data_fit.Period]
 .+ β_fit[data_fit.Period,12] .* data_fit.Eth_HISPA_Ind
 .+ β_fit[data_fit.Period,13] .* data_fit.Eth_WHITE_Ind
 .+ β_fit[data_fit.Period,14] .* data_fit.Eth_Multi_Ind
-.+ β_fit[data_fit.Period,15] .* data_fit.major_finder_std
-.+ β_fit[data_fit.Period,16] .* data_fit.SFS_std
-.+ β_fit[data_fit.Period,17] .* data_fit.Blue_Gold_Ind
-.+ β_fit[data_fit.Period,18] .* data_fit.Early_Event_Ind
-.+ β_fit[data_fit.Period,19] .* data_fit.Delay_Review_Ind
+.+ β_fit[data_fit.Period,15] .* data_fit.Postcard_Ind
+.+ β_fit[data_fit.Period,16] .* data_fit.Pros_Event_Ind
+.+ β_fit[data_fit.Period,17] .* data_fit.CampusTour_Ever_Ind
+.+ β_fit[data_fit.Period,18] .* data_fit.DecisionDay_Ever_Ind
+.+ β_fit[data_fit.Period,19] .* data_fit.Financing_Started
+.+ β_fit[data_fit.Period,20] .* data_fit.FinAid_Started
 
 )
 
@@ -526,11 +553,11 @@ Hierarchical
 Dynamic σ
 ```
 
-raw_MLE_para = CSV.read("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/para_2218_20220817.csv", DataFrame)
-raw_MLE_high_para = CSV.read("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/para_2218_high_20220817.csv", DataFrame)
+raw_MLE_para = CSV.read("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/para_2208_20221028.csv", DataFrame)
+raw_MLE_high_para = CSV.read("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/para_2208_high_20221028.csv", DataFrame)
 print(raw_MLE_para)
 
-n_var = 19
+n_var = 20
 n_Period
 
 struct SurvivalProblem{Ty, TX}
@@ -555,7 +582,7 @@ function (problem::SurvivalProblem)(θ)
   Xβ = (
     β0[X] 
     .+ β[0*n_Period .+ X] .* data_fit.Admit_Ind 
-    .+ β[1*n_Period .+ X] .* data_fit.hs_gpa_std
+    .+ β[1*n_Period .+ X] .* data_fit.home_distance_std
     .+ β[2*n_Period .+ X] .* data_fit.Admit_Honor_Ind 
     .+ β[3*n_Period .+ X] .* data_fit.Diff_Major_Ind 
     .+ β[4*n_Period .+ X] .* data_fit.Gender_Ind 
@@ -568,11 +595,12 @@ function (problem::SurvivalProblem)(θ)
     .+ β[11*n_Period .+ X] .* data_fit.Eth_HISPA_Ind 
     .+ β[12*n_Period .+ X] .* data_fit.Eth_WHITE_Ind 
     .+ β[13*n_Period .+ X] .* data_fit.Eth_Multi_Ind 
-    .+ β[14*n_Period .+ X] .* data_fit.major_finder_std
-    .+ β[15*n_Period .+ X] .* data_fit.SFS_std
-    .+ β[16*n_Period .+ X] .* data_fit.Blue_Gold_Ind
-    .+ β[17*n_Period .+ X] .* data_fit.Early_Event_Ind
-    .+ β[18*n_Period .+ X] .* data_fit.Delay_Review_Ind
+    .+ β[14*n_Period .+ X] .* data_fit.Postcard_Ind
+    .+ β[15*n_Period .+ X] .* data_fit.Pros_Event_Ind
+    .+ β[16*n_Period .+ X] .* data_fit.CampusTour_Ever_Ind
+    .+ β[17*n_Period .+ X] .* data_fit.DecisionDay_Ever_Ind
+    .+ β[18*n_Period .+ X] .* data_fit.Financing_Started
+    .+ β[19*n_Period .+ X] .* data_fit.FinAid_Started
     )
 
   loglike = sum(y .* Xβ .- exp.(Xβ) .* data_fit.Period_length)
@@ -622,7 +650,7 @@ P = TransformedLogDensity(t, p)
 
 q₀ = vcat(raw_MLE_para.β0
             , raw_MLE_para.β_Admit
-            , raw_MLE_para.β_hs_gpa
+            , raw_MLE_para.β_home_distance
             , raw_MLE_para.β_Admit_Honor
             , raw_MLE_para.β_Diff_Major
             , raw_MLE_para.β_Gender
@@ -635,14 +663,15 @@ q₀ = vcat(raw_MLE_para.β0
             , raw_MLE_para.β_HISPA
             , raw_MLE_para.β_WHITE
             , raw_MLE_para.β_Multi
-            , raw_MLE_para.β_Major_Finder
-            , raw_MLE_para.β_SFS
-            , raw_MLE_para.β_Blue_Gold
-            , raw_MLE_para.β_Early_Event
-            , raw_MLE_para.β_Delay_Review
+            , raw_MLE_para.β_Postcard
+            , raw_MLE_para.β_Pros_Event
+            , raw_MLE_para.β_CampusTour
+            , raw_MLE_para.β_DecisionDay
+            , raw_MLE_para.β_Financing
+            , raw_MLE_para.β_FinAid
 
             , raw_MLE_high_para.β_Admit[1]
-            , raw_MLE_high_para.β_hs_gpa[1]
+            , raw_MLE_high_para.β_home_distance[1]
             , raw_MLE_high_para.β_Admit_Honor[1]
             , raw_MLE_high_para.β_Diff_Major[1]
             , raw_MLE_high_para.β_Gender[1]
@@ -655,11 +684,12 @@ q₀ = vcat(raw_MLE_para.β0
             , raw_MLE_high_para.β_HISPA[1]
             , raw_MLE_high_para.β_WHITE[1]
             , raw_MLE_high_para.β_Multi[1]
-            , raw_MLE_high_para.β_Major_Finder[1]
-            , raw_MLE_high_para.β_SFS[1]
-            , raw_MLE_high_para.β_Blue_Gold[1]
-            , raw_MLE_high_para.β_Early_Event[1]
-            , raw_MLE_high_para.β_Delay_Review[1] 
+            , raw_MLE_high_para.β_Postcard[1]
+            , raw_MLE_high_para.β_Pros_Event[1]
+            , raw_MLE_high_para.β_CampusTour[1]
+            , raw_MLE_high_para.β_DecisionDay[1]
+            , raw_MLE_high_para.β_Financing[1] 
+            , raw_MLE_high_para.β_FinAid[1]
 
             , log(1.0)
             , log(0.2) )
@@ -697,7 +727,7 @@ mean(DataFrame(results.chain,:auto)[1,:])
 chain_df = DataFrame(results.chain,:auto)
 plot(Vector(chain_df[15,:]))
 plot(Vector(chain_df[25,:]))
-#CSV.write("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/chain_2218_20220819.csv", chain_df)
+#CSV.write("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/chain_2208_20221028.csv", chain_df)
 
 print(mean(Matrix(chain_df), dims = 2))
 μ_chain_df = mean(Matrix(chain_df), dims = 2)
@@ -734,9 +764,10 @@ n_β = (n_var+1)*n_Period
     .+ β[18*n_Period .+ X] .* data_fit.Delay_Review_Ind
 =#
 
+
 Xβ_fit = (β0_fit[data_fit.Period] 
 .+ β_fit[data_fit.Period,1] .* data_fit.Admit_Ind
-.+ β_fit[data_fit.Period,2] .* data_fit.hs_gpa_std
+.+ β_fit[data_fit.Period,2] .* data_fit.home_distance_std
 .+ β_fit[data_fit.Period,3] .* data_fit.Admit_Honor_Ind
 .+ β_fit[data_fit.Period,4] .* data_fit.Diff_Major_Ind
 .+ β_fit[data_fit.Period,5] .* data_fit.Gender_Ind
@@ -749,13 +780,12 @@ Xβ_fit = (β0_fit[data_fit.Period]
 .+ β_fit[data_fit.Period,12] .* data_fit.Eth_HISPA_Ind
 .+ β_fit[data_fit.Period,13] .* data_fit.Eth_WHITE_Ind
 .+ β_fit[data_fit.Period,14] .* data_fit.Eth_Multi_Ind
-.+ β_fit[data_fit.Period,15] .* data_fit.major_finder_std
-.+ β_fit[data_fit.Period,16] .* data_fit.SFS_std
-.+ β_fit[data_fit.Period,17] .* data_fit.Blue_Gold_Ind
-.+ β_fit[data_fit.Period,18] .* data_fit.Early_Event_Ind
-.+ β_fit[data_fit.Period,19] .* data_fit.Delay_Review_Ind
-
-
+.+ β_fit[data_fit.Period,15] .* data_fit.Postcard_Ind
+.+ β_fit[data_fit.Period,16] .* data_fit.Pros_Event_Ind
+.+ β_fit[data_fit.Period,17] .* data_fit.CampusTour_Ever_Ind
+.+ β_fit[data_fit.Period,18] .* data_fit.DecisionDay_Ever_Ind
+.+ β_fit[data_fit.Period,19] .* data_fit.Financing_Started
+.+ β_fit[data_fit.Period,20] .* data_fit.FinAid_Started
 )
 
 
