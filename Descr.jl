@@ -29,7 +29,7 @@ raw = CSV.read("C:/Users/chuanc/University of Delaware - o365/Team-IRE-Staff Sha
 
 raw_chain_2228 = CSV.read("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/chain_2228_20220819.csv", DataFrame)
 raw_chain_2218 = CSV.read("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/chain_2218_20220819.csv", DataFrame)
-raw_chain_2208 = CSV.read("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/chain_2208_20220819.csv", DataFrame)
+raw_chain_2208 = CSV.read("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/chain_2208_20221028.csv", DataFrame)
 
 
 hcat(1:ncol(raw), names(raw))
@@ -57,7 +57,7 @@ Results
 
 
 n_Period = 8
-n_var = 19
+n_var = 20
 n_σ = 2
 
 raw_chain = raw_chain_2208
@@ -100,8 +100,88 @@ rename!(effect_df, :x3 => :Percentile_5)
 rename!(effect_df, :x4 => :Mean)
 rename!(effect_df, :x5 => :Median)
 rename!(effect_df, :x6 => :Percentile_95)
-#CSV.write("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/Effect_2208_20221018.csv", effect_df)
+#CSV.write("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/Effect_2208_20221031.csv", effect_df)
 
 effect_gdf = groupby(effect_df, :Var_Seq)
 combine(effect_gdf, :x7 => minimum)
 
+#=
+para_df = DataFrame(
+    β0 = value.(β0)
+    , β_Admit = value.(β)[1]
+    , β_home_distance = value.(β)[2]
+    , β_Admit_Honor = value.(β)[3]
+    , β_Diff_Major = value.(β)[4]
+    , β_Gender = value.(β)[5]
+    , β_inst_grant = value.(β)[6]
+    , β_loan = value.(β)[7]
+    , β_fed_efc = value.(β)[8]
+    , β_Pell = value.(β)[9]
+    , β_ASIAN = value.(β)[10]
+    , β_BLACK = value.(β)[11]
+    , β_HISPA = value.(β)[12]
+    , β_WHITE = value.(β)[13]
+    , β_Multi = value.(β)[14]
+    , β_Postcard = value.(β)[15]
+    , β_Pros_Event = value.(β)[16]
+    , β_CampusTour = value.(β)[17]
+    , β_DecisionDay = value.(β)[18]
+    , β_Financing = value.(β)[19]
+    , β_FinAid = value.(β)[20]
+)
+=#
+
+
+```
+whether variables are important
+```
+
+p_mtx = ones(n_var+1,n_Period)
+p_intval_mtx = Array{Tuple{Float64 ,Float64}, 2}(undef, n_var+1, 8)
+p_star_mtx = Array{String, 2}(undef, 21, 8)
+for i in 1:(n_var+1)
+    for j in 1:n_Period
+        p_mtx[i,j] = pvalue(OneSampleZTest(vec(Matrix(raw_chain[((i-1)*n_Period+j):((i-1)*n_Period+j),:]))))
+        p_intval_mtx[i,j] = round.(confint(OneSampleZTest(vec(Matrix(raw_chain[((i-1)*n_Period+j):((i-1)*n_Period+j),:]))));digits=3)
+        if p_mtx[i,j] <0.01
+            p_star_mtx[i,j] = "***"
+        elseif p_mtx[i,j] <0.05
+            p_star_mtx[i,j] = "**"
+        elseif p_mtx[i,j] <0.1
+            p_star_mtx[i,j] = "*"
+        else p_star_mtx[i,j] = " "
+        end
+    end
+end
+
+p_mtx[4,3]
+p_intval_mtx[4,3]
+p_star_mtx[4,3]
+
+p_df = DataFrame(hcat(1:(n_var+1),p_mtx), :auto)
+p_intval_df = DataFrame(hcat(1:(n_var+1),p_intval_mtx), :auto)
+p_star_df = DataFrame(hcat(1:(n_var+1),p_star_mtx), :auto)
+#CSV.write("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/p_df_2208_20221101.csv", p_df)
+#CSV.write("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/p_intval_df_2208_20221101.csv", p_intval_df)
+#CSV.write("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/p_star_df_2208_20221101.csv", p_star_df)
+
+```
+whether a variable has time-varying effect
+```
+
+Comp_intval = Array{Tuple{Float64 ,Float64}, 2}(undef, n_var, Int(n_Period*(n_Period-1)/2))
+for i in 1:n_var
+    for j in 1:(n_Period-1)
+        for k in (j+1):n_Period
+            x = vec(Matrix(raw_chain[(i*n_Period+j):(i*n_Period+j),:]))
+            y = vec(Matrix(raw_chain[(i*n_Period+k):(i*n_Period+k),:]))
+            Comp_intval[i, Int(((j-1)*n_Period-j*(j-1)/2+(k-j)))] = round.(confint(UnequalVarianceZTest(x,y); level = 0.95, tail=:both); digits=3)
+        end
+    end
+    
+end
+
+Comp_intval_df = DataFrame(hcat(1:n_var,Comp_intval), :auto)
+#CSV.write("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/Comp_intval_df_2208_20221101.csv", Comp_intval_df)
+
+Need to get max difference for each variable

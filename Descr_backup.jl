@@ -17,6 +17,7 @@ using DataFrames
 
 using FreqTables, StatsBase
 
+using HypothesisTests
 
 ```
 Load raw data
@@ -347,25 +348,74 @@ Three years together
 Load raw chains
 ```
 
-raw_chain_2228 = CSV.read("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/chain_2228_20220819.csv", DataFrame)
-raw_chain_2218 = CSV.read("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/chain_2218_20220819.csv", DataFrame)
-raw_chain_2208 = CSV.read("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/chain_2208_20220819.csv", DataFrame)
+raw_chain_2228 = CSV.read("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/chain_2228_20221028.csv", DataFrame)
+raw_chain_2218 = CSV.read("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/chain_2218_20221028.csv", DataFrame)
+raw_chain_2208 = CSV.read("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/chain_2208_20221028.csv", DataFrame)
 
 n_Period = 8
-n_var = 19
+n_var = 20
 n_σ = 2
 
 plot(reshape(transpose(Array(raw_chain_2208[1:n_Period,:])), :, 1), label = "Fall 2020", yaxis = ("β0"), legend=:topleft, alpha=0.2) 
 plot!(reshape(transpose(Array(raw_chain_2218[1:n_Period,:])), :, 1), label = "Fall 2021", alpha=0.2)
 display(plot!(reshape(transpose(Array(raw_chain_2228[1:n_Period,:])), :, 1), label = "Fall 2022", alpha=0.2))
 
+#=
+para_df = DataFrame(
+    β0 = value.(β0)
+    , β_Admit = value.(β)[1]
+    , β_home_distance = value.(β)[2]
+    , β_Admit_Honor = value.(β)[3]
+    , β_Diff_Major = value.(β)[4]
+    , β_Gender = value.(β)[5]
+    , β_inst_grant = value.(β)[6]
+    , β_loan = value.(β)[7]
+    , β_fed_efc = value.(β)[8]
+    , β_Pell = value.(β)[9]
+    , β_ASIAN = value.(β)[10]
+    , β_BLACK = value.(β)[11]
+    , β_HISPA = value.(β)[12]
+    , β_WHITE = value.(β)[13]
+    , β_Multi = value.(β)[14]
+    , β_Postcard = value.(β)[15]
+    , β_Pros_Event = value.(β)[16]
+    , β_CampusTour = value.(β)[17]
+    , β_DecisionDay = value.(β)[18]
+    , β_Financing = value.(β)[19]
+    , β_FinAid = value.(β)[20]
+)
+=#
 
+var_name = ["β_Admit", "β_home_distance", "β_Admit_Honor", "β_Diff_Major", "β_Gender", "β_inst_grant", "β_loan", "β_fed_efc", "β_Pell", 
+            "β_ASIAN", "β_BLACK", "β_HISPA", "β_WHITE", "β_Multi", "β_Postcard", "β_Pros_Event", "β_CampusTour", "β_DecisionDay", "β_Financing","β_FinAid"]
 
 for i in 1:n_var
     plot(reshape(transpose(Array(raw_chain_2208[(i*n_Period+1):(i*n_Period+n_Period),:])), :, 1), label = "Fall 2020", alpha=0.2)
     plot!(reshape(transpose(Array(raw_chain_2218[(i*n_Period+1):(i*n_Period+n_Period),:])), :, 1), label = "Fall 2021", alpha=0.2)
     display(plot!(reshape(transpose(Array(raw_chain_2228[(i*n_Period+1):(i*n_Period+n_Period),:])), :, 1), label = "Fall 2022", yaxis = var_name[i], legend=:topleft, alpha=0.2)) 
  end
+
+##############
+sample_var = 7
+histogram(reshape(transpose(Array(raw_chain_2208[(sample_var*n_Period+1):(sample_var*n_Period+1),:])), :, 1), alpha=0.7)
+histogram!(reshape(transpose(Array(raw_chain_2208[(sample_var*n_Period+5):(sample_var*n_Period+5),:])), :, 1), alpha=0.7)
+
+x = reshape(transpose(Array(raw_chain_2208[(sample_var*n_Period+1):(sample_var*n_Period+1),:])), :, 1)
+y = reshape(transpose(Array(raw_chain_2208[(sample_var*n_Period+5):(sample_var*n_Period+5),:])), :, 1)
+x = vec(transpose(Array(raw_chain_2208[(sample_var*n_Period+1):(sample_var*n_Period+1),:])))
+y = vec(transpose(Array(raw_chain_2208[(sample_var*n_Period+5):(sample_var*n_Period+5),:])))
+
+z = UnequalVarianceZTest(x,y)
+
+x = vec(transpose(Array(raw_chain_2208[(sample_var*n_Period+1):(sample_var*n_Period+1),:])))
+y = vec(transpose(Array(raw_chain_2208[(sample_var*n_Period+7):(sample_var*n_Period+7),:])))
+UnequalVarianceZTest(x,y)
+confint(UnequalVarianceZTest(x,y); level = 0.95, tail=:both)
+
+transpose(Matrix(raw_chain[(i*n_Period+1):(i*n_Period+n_Period),:]))
+
+OneSampleZTest(vec(Matrix(raw_chain[((4-1)*n_Period+3):((4-1)*n_Period+3),:])))
+confint(OneSampleZTest(vec(Matrix(raw_chain[((4-1)*n_Period+3):((4-1)*n_Period+3),:]))); level = 0.90, tail=:both)
 ##############
 
 i_test = 10
@@ -373,3 +423,5 @@ i_test = 10
 
 
 plot(reshape(transpose(Array(raw_chain_2218[1:n_Period,:])), :, 1), label = "Fall 2021")
+
+p_star_mtx = Array{String, 2}(undef, 21, 8)
