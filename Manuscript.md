@@ -91,6 +91,15 @@ $$ \sigma \sim \mathrm{Exponential}(0.5) $$ (8)
 
 ## Results and Discussion
 
+### Fall 2020
+All variables have important effects on yield decisions, and they all have time-varying effects. 
+
+[Insert Table 5 Here]
+
+In a Bayesian analysis, the time-varying effects are easily visualized.
+
+[Insert Figure 1 Here]
+
 Time-varying effects
 
 Time-independent effects

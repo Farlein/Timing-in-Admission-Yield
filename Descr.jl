@@ -8,7 +8,7 @@ Load packages
 
 #using Random, Distributions
 
-using Plots, StatsPlots
+using Plots, StatsPlots, ColorSchemes
 
 #using PlotlyJS
 
@@ -169,6 +169,7 @@ p_star_df = DataFrame(hcat(1:(n_var+1),p_star_mtx), :auto)
 whether a variable has time-varying effect
 ```
 
+z_mtx = ones(n_var, Int(n_Period*(n_Period-1)/2))
 Comp_intval = Array{Tuple{Float64 ,Float64}, 2}(undef, n_var, Int(n_Period*(n_Period-1)/2))
 for i in 1:n_var
     for j in 1:(n_Period-1)
@@ -176,12 +177,50 @@ for i in 1:n_var
             x = vec(Matrix(raw_chain[(i*n_Period+j):(i*n_Period+j),:]))
             y = vec(Matrix(raw_chain[(i*n_Period+k):(i*n_Period+k),:]))
             Comp_intval[i, Int(((j-1)*n_Period-j*(j-1)/2+(k-j)))] = round.(confint(UnequalVarianceZTest(x,y); level = 0.95, tail=:both); digits=3)
+            z_mtx[i, Int(((j-1)*n_Period-j*(j-1)/2+(k-j)))] = round(abs(UnequalVarianceZTest(x,y).z); digits=1)
         end
     end
     
 end
 
+findmax(z_mtx, dims=2)[2]
+findmin(z_mtx, dims=2)[2]
 Comp_intval_df = DataFrame(hcat(1:n_var,Comp_intval), :auto)
+z_df = DataFrame(hcat(1:n_var,z_mtx), :auto)
 #CSV.write("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/Comp_intval_df_2208_20221101.csv", Comp_intval_df)
+#CSV.write("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/z_df_2208_20221101.csv", z_df)
 
-Need to get max difference for each variable
+```
+Examples of time-varying effects
+```
+sample_var = 5
+plot_1 = histogram(reshape(transpose(Array(raw_chain_2208[(sample_var*n_Period+1):(sample_var*n_Period+1),:])), :, 1), alpha=0.7, label = "Period 1")
+histogram!(reshape(transpose(Array(raw_chain_2208[(sample_var*n_Period+7):(sample_var*n_Period+7),:])), :, 1), alpha=0.7
+            , xaxis = "Gender", yaxis = "", label = "Period 8")
+
+sample_var = 9
+plot_2 = histogram(reshape(transpose(Array(raw_chain_2208[(sample_var*n_Period+1):(sample_var*n_Period+1),:])), :, 1), alpha=0.7, label = "Period 1")
+histogram!(reshape(transpose(Array(raw_chain_2208[(sample_var*n_Period+7):(sample_var*n_Period+7),:])), :, 1), alpha=0.7
+            , xaxis = "Pell", yaxis = "", label = "Period 8")            
+
+sample_var = 16
+plot_3 = histogram(reshape(transpose(Array(raw_chain_2208[(sample_var*n_Period+1):(sample_var*n_Period+1),:])), :, 1), alpha=0.7, label = "Period 1")
+histogram!(reshape(transpose(Array(raw_chain_2208[(sample_var*n_Period+7):(sample_var*n_Period+7),:])), :, 1), alpha=0.7
+            , xaxis = "Early Events", yaxis = "", label = "Period 8")   
+
+sample_var = 7
+plot_4 = histogram(reshape(transpose(Array(raw_chain_2208[(sample_var*n_Period+1):(sample_var*n_Period+1),:])), :, 1), alpha=0.7, label = "Period 1")
+histogram!(reshape(transpose(Array(raw_chain_2208[(sample_var*n_Period+7):(sample_var*n_Period+7),:])), :, 1), alpha=0.7
+            , xaxis = "Loan", yaxis = "", label = "Period 8")  
+
+plot(plot_1,plot_2,plot_3,plot_4,layout = (2, 2), legend = false)
+
+#####
+
+sample_var = 7
+plot_mtx = ones(1000, n_Period)
+for i in 1:n_Period
+    plot_mtx[:,i] = vec(Matrix(raw_chain[(sample_var*n_Period+i):(sample_var*n_Period+i),:]))
+end
+boxplot(["Period 1" "Period 2" "Period 3" "Period 4" "Period 5" "Period 6" "Period 7" "Period 8"], plot_mtx
+            , legend=false, yaxis="Loan"; palette = :grayC)

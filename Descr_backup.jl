@@ -315,6 +315,9 @@ Draw Interaction Plots
 
 ```
 
+var_name = ["β_Admit", "β_home_distance", "β_Admit_Honor", "β_Diff_Major", "β_Gender", "β_inst_grant", "β_loan", "β_fed_efc", "β_Pell", 
+            "β_ASIAN", "β_BLACK", "β_HISPA", "β_WHITE", "β_Multi", "β_Postcard", "β_Pros_Event", "β_CampusTour", "β_DecisionDay", "β_Financing","β_FinAid"]
+
 plot(reshape(transpose(Array(raw_chain[(6*n_Period+1):(6*n_Period+n_Period),:])), :, 1), reshape(transpose(Array(raw_chain[(7*n_Period+1):(7*n_Period+n_Period),:])), :, 1))
 
 plot(reshape(transpose(Array(raw_chain[(6*n_Period+n_Period):(6*n_Period+n_Period),:])), :, 1), reshape(transpose(Array(raw_chain[(7*n_Period+n_Period):(7*n_Period+n_Period),:])), :, 1))
@@ -416,6 +419,9 @@ transpose(Matrix(raw_chain[(i*n_Period+1):(i*n_Period+n_Period),:]))
 
 OneSampleZTest(vec(Matrix(raw_chain[((4-1)*n_Period+3):((4-1)*n_Period+3),:])))
 confint(OneSampleZTest(vec(Matrix(raw_chain[((4-1)*n_Period+3):((4-1)*n_Period+3),:]))); level = 0.90, tail=:both)
+
+boxplot(x)
+
 ##############
 
 i_test = 10
@@ -425,3 +431,4 @@ i_test = 10
 plot(reshape(transpose(Array(raw_chain_2218[1:n_Period,:])), :, 1), label = "Fall 2021")
 
 p_star_mtx = Array{String, 2}(undef, 21, 8)
+
