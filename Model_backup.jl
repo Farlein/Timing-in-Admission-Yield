@@ -144,7 +144,7 @@ u = 10 .* ones(n_Period)
 @variable(surv_fit, l[i] <= β0[i = 1:n_Period] <= u[i])
 #@variable(surv_fit, β0[i = 1:n_Period] )
 
-n_var = 21
+n_var = 20
 l_β = -10 .* ones(n_var)  
 u_β = 10 .* ones(n_var)  
 @variable(surv_fit, l_β[i] <= β[i = 1:n_Period, 1:n_var] <= u_β[i])
@@ -172,12 +172,14 @@ u_β = 10 .* ones(n_var)
                         + β[data_fit.Period[i],18] * data_fit.CampusTour_Ever_Ind[i]
                         + β[data_fit.Period[i],19] * data_fit.DecisionDay_Ever_Ind[i]
                         + β[data_fit.Period[i],20] * data_fit.Financing_Started[i]
-                        + β[data_fit.Period[i],21] * data_fit.FinAid_Started[i]
 #=                        
                         
                         
                         
                         
+                        
+                        
+                        + β[data_fit.Period[i],21] * data_fit.FinAid_Started[i]                     
                         
 =#
     )
@@ -246,13 +248,15 @@ para_df = DataFrame(
     , β_CampusTour = value.(β)[:,18]
     , β_DecisionDay = value.(β)[:,19]
     , β_Financing = value.(β)[:,20]
-    #, β_FinAid = value.(β)[:,21]
+
 #=    
+        
     
     
     
     
-    
+    , β_FinAid = value.(β)[:,21]
+   
     =#
 )
 
@@ -335,3 +339,50 @@ Actual_vs_Fit = DataFrame(
                     , Fit = combine(groupby(data_fit, :Period), :θ_fit => sum).θ_fit_sum )
 
 #CSV.write("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/Performance_2228_20220817.csv", Actual_vs_Fit)
+
+### Baseline
+β_test = 1.6
+θ_test = 0.5
+1-exp(exp(β_test)log(1-θ_test))
+
+### Pell
+β_test = 0.56
+θ_test = 0.15
+1-exp(exp(β_test)log(1-θ_test))
+
+β_test = 0.26
+θ_test = 0.15
+1-exp(exp(β_test)log(1-θ_test))
+
+β_test = 0.5
+θ_test = 0.1
+1-exp(exp(β_test)log(1-θ_test))
+
+β_test = 1
+θ_test = 0.1
+x_diff = 0.1
+1-exp(exp(β_test*x_diff)log(1-θ_test))
+
+θ_2= 0.159
+log(-log(1-θ_2))
+θ_1 = 0.1
+log(-log(1-θ_1))
+log(-log(1-θ_2)) - log(-log(1-θ_1))
+
+θ_2= 0.11
+log(-log(1-θ_2))
+θ_1 = 0.1
+log(-log(1-θ_1))
+log(-log(1-θ_2)) - log(-log(1-θ_1))
+
+θ_2= 0.2
+log(-log(1-θ_2))
+θ_1 = 0.1
+log(-log(1-θ_1))
+log(-log(1-θ_2)) - log(-log(1-θ_1))
+
+θ_2= 0.105
+log(-log(1-θ_2))
+θ_1 = 0.1
+log(-log(1-θ_1))
+log(-log(1-θ_2)) - log(-log(1-θ_1))

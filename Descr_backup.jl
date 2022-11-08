@@ -350,13 +350,14 @@ Three years together
 ```
 Load raw chains
 ```
+raw_chain_2208 = CSV.read("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/chain_2208_20221102.csv", DataFrame)
+raw_chain_2218 = CSV.read("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/chain_2218_20221102.csv", DataFrame)
+raw_chain_2228 = CSV.read("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/chain_2228_20221102.csv", DataFrame)
 
-raw_chain_2228 = CSV.read("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/chain_2228_20221028.csv", DataFrame)
-raw_chain_2218 = CSV.read("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/chain_2218_20221028.csv", DataFrame)
-raw_chain_2208 = CSV.read("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/chain_2208_20221028.csv", DataFrame)
+
 
 n_Period = 8
-n_var = 20
+n_var = 19
 n_σ = 2
 
 plot(reshape(transpose(Array(raw_chain_2208[1:n_Period,:])), :, 1), label = "Fall 2020", yaxis = ("β0"), legend=:topleft, alpha=0.2) 
@@ -390,7 +391,7 @@ para_df = DataFrame(
 =#
 
 var_name = ["β_Admit", "β_home_distance", "β_Admit_Honor", "β_Diff_Major", "β_Gender", "β_inst_grant", "β_loan", "β_fed_efc", "β_Pell", 
-            "β_ASIAN", "β_BLACK", "β_HISPA", "β_WHITE", "β_Multi", "β_Postcard", "β_Pros_Event", "β_CampusTour", "β_DecisionDay", "β_Financing","β_FinAid"]
+            "β_ASIAN", "β_BLACK", "β_HISPA", "β_WHITE", "β_Multi", "β_Postcard", "β_Pros_Event", "β_CampusTour", "β_DecisionDay", "β_Delay_Review"]
 
 for i in 1:n_var
     plot(reshape(transpose(Array(raw_chain_2208[(i*n_Period+1):(i*n_Period+n_Period),:])), :, 1), label = "Fall 2020", alpha=0.2)
@@ -399,7 +400,11 @@ for i in 1:n_var
  end
 
 ##############
-sample_var = 7
+sample_var = 6
+quantile(vec(Array(raw_chain_2208[(sample_var*n_Period+1):(sample_var*n_Period+1),:])), 0.025)
+quantile(vec(Array(raw_chain_2208[(sample_var*n_Period+1):(sample_var*n_Period+1),:])), 0.975)
+OneSampleZTest(vec(Array(raw_chain_2208[(sample_var*n_Period+1):(sample_var*n_Period+1),:])), 0.0)
+
 histogram(reshape(transpose(Array(raw_chain_2208[(sample_var*n_Period+1):(sample_var*n_Period+1),:])), :, 1), alpha=0.7)
 histogram!(reshape(transpose(Array(raw_chain_2208[(sample_var*n_Period+5):(sample_var*n_Period+5),:])), :, 1), alpha=0.7)
 
@@ -432,3 +437,16 @@ plot(reshape(transpose(Array(raw_chain_2218[1:n_Period,:])), :, 1), label = "Fal
 
 p_star_mtx = Array{String, 2}(undef, 21, 8)
 
+
+d = Normal()
+quantile(d, 0.5)
+quantile(d, 0.95)
+pdf(d, 0)
+cdf(d, 0)
+d_rdm = rand(d, 1000)
+
+quantile(d_rdm, 0.025)
+quantile(d_rdm, 0.975)
+OneSampleZTest(d_rdm, 0.0)
+
+percentile(d_rdm,2.5)
