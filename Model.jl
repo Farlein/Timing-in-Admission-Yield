@@ -21,7 +21,6 @@ using FreqTables, StatsBase
 
 #using JuMP, Ipopt
 
-
 using TransformVariables, LogDensityProblems, DynamicHMC, DynamicHMC.Diagnostics
 using MCMCDiagnostics
 using Parameters, Statistics
@@ -176,7 +175,7 @@ u = 10 .* ones(n_Period)
 @variable(surv_fit, l[i] <= β0[i = 1:n_Period] <= u[i])
 #@variable(surv_fit, β0[i = 1:n_Period] )
 
-n_var = 20
+n_var = 19
 l_β = -10 .* ones(n_var)  
 u_β = 10 .* ones(n_var)  
 @variable(surv_fit, l_β[i] <= β[i = 1:n_var] <= u_β[i])
@@ -202,9 +201,7 @@ u_β = 10 .* ones(n_var)
                         + β[16] * data_fit.Pros_Event_Ind[i]
                         + β[17] * data_fit.CampusTour_Ever_Ind[i]
                         + β[18] * data_fit.DecisionDay_Ever_Ind[i]
-                        + β[19] * data_fit.Financing_Started[i]
-                        + β[20] * data_fit.FinAid_Started[i]
-
+                        + β[19] * data_fit.Delay_Review_Ind[i]
     )
 
 #=       
@@ -268,13 +265,12 @@ para_df = DataFrame(
     , β_Pros_Event = value.(β)[16]
     , β_CampusTour = value.(β)[17]
     , β_DecisionDay = value.(β)[18]
-    , β_Financing = value.(β)[19]
-    , β_FinAid = value.(β)[20]
+    , β_Delay_Review = value.(β)[19]
 )
 
 print(para_df)
 
-#CSV.write("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/para_2228_high_20221028.csv", para_df)
+#CSV.write("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/para_2228_high_20221102.csv", para_df)
 
 # para_df = CSV.read("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/para_2208_Baseline_20220628.csv", DataFrame)
 
@@ -323,9 +319,7 @@ Xβ_fit = (β0_fit[data_fit.Period]
 .+ β_fit[16] .* data_fit.Pros_Event_Ind
 .+ β_fit[17] .* data_fit.CampusTour_Ever_Ind
 .+ β_fit[18] .* data_fit.DecisionDay_Ever_Ind
-.+ β_fit[19] .* data_fit.Financing_Started
-.+ β_fit[20] .* data_fit.FinAid_Started
-
+.+ β_fit[19] .* data_fit.Delay_Review_Ind
 )
 
 λ_fit = exp.(Xβ_fit)
@@ -366,7 +360,7 @@ u = 10 .* ones(n_Period)
 @variable(surv_fit, l[i] <= β0[i = 1:n_Period] <= u[i])
 #@variable(surv_fit, β0[i = 1:n_Period] )
 
-n_var = 20
+n_var = 19
 l_β = -10 .* ones(n_var)  
 u_β = 10 .* ones(n_var)  
 @variable(surv_fit, l_β[i] <= β[i = 1:n_Period, 1:n_var] <= u_β[i])
@@ -392,8 +386,7 @@ u_β = 10 .* ones(n_var)
                         + β[data_fit.Period[i],16] * data_fit.Pros_Event_Ind[i]
                         + β[data_fit.Period[i],17] * data_fit.CampusTour_Ever_Ind[i]
                         + β[data_fit.Period[i],18] * data_fit.DecisionDay_Ever_Ind[i]
-                        + β[data_fit.Period[i],19] * data_fit.Financing_Started[i]
-                        + β[data_fit.Period[i],20] * data_fit.FinAid_Started[i]
+                        + β[data_fit.Period[i],19] * data_fit.Delay_Review_Ind[i]
 
     )
 
@@ -459,13 +452,12 @@ para_df = DataFrame(
     , β_Pros_Event = value.(β)[:,16]
     , β_CampusTour = value.(β)[:,17]
     , β_DecisionDay = value.(β)[:,18]
-    , β_Financing = value.(β)[:,19]
-    , β_FinAid = value.(β)[:,20]
+    , β_Delay_Review = value.(β)[:,19]
 )
 
 print(para_df)
 
-#CSV.write("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/para_2228_20221028.csv", para_df)
+#CSV.write("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/para_2228_20221102.csv", para_df)
 
 # para_df = CSV.read("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/para_2208_Baseline_20220628.csv", DataFrame)
 
@@ -516,8 +508,7 @@ Xβ_fit = (β0_fit[data_fit.Period]
 .+ β_fit[data_fit.Period,16] .* data_fit.Pros_Event_Ind
 .+ β_fit[data_fit.Period,17] .* data_fit.CampusTour_Ever_Ind
 .+ β_fit[data_fit.Period,18] .* data_fit.DecisionDay_Ever_Ind
-.+ β_fit[data_fit.Period,19] .* data_fit.Financing_Started
-.+ β_fit[data_fit.Period,20] .* data_fit.FinAid_Started
+.+ β_fit[data_fit.Period,19] .* data_fit.Delay_Review_Ind
 
 )
 
@@ -555,16 +546,16 @@ Hierarchical
 Dynamic σ
 ```
 
-#raw_MLE_para = CSV.read("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/para_2208_20221028.csv", DataFrame)
-#raw_MLE_high_para = CSV.read("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/para_2208_high_20221028.csv", DataFrame)
-#raw_MLE_para = CSV.read("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/para_2218_20221028.csv", DataFrame)
-#raw_MLE_high_para = CSV.read("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/para_2218_high_20221028.csv", DataFrame)
-raw_MLE_para = CSV.read("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/para_2228_20221028.csv", DataFrame)
-raw_MLE_high_para = CSV.read("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/para_2228_high_20221028.csv", DataFrame)
+#raw_MLE_para = CSV.read("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/para_2208_20221102.csv", DataFrame)
+#raw_MLE_high_para = CSV.read("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/para_2208_high_20221102.csv", DataFrame)
+#raw_MLE_para = CSV.read("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/para_2218_20221102.csv", DataFrame)
+#raw_MLE_high_para = CSV.read("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/para_2218_high_20221102.csv", DataFrame)
+raw_MLE_para = CSV.read("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/para_2228_20221102.csv", DataFrame)
+raw_MLE_high_para = CSV.read("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/para_2228_high_20221102.csv", DataFrame)
 
 print(raw_MLE_para)
 
-n_var = 20
+n_var = 19
 n_Period
 
 struct SurvivalProblem{Ty, TX}
@@ -606,8 +597,7 @@ function (problem::SurvivalProblem)(θ)
     .+ β[15*n_Period .+ X] .* data_fit.Pros_Event_Ind
     .+ β[16*n_Period .+ X] .* data_fit.CampusTour_Ever_Ind
     .+ β[17*n_Period .+ X] .* data_fit.DecisionDay_Ever_Ind
-    .+ β[18*n_Period .+ X] .* data_fit.Financing_Started
-    .+ β[19*n_Period .+ X] .* data_fit.FinAid_Started
+    .+ β[18*n_Period .+ X] .* data_fit.Delay_Review_Ind
     )
 
   loglike = sum(y .* Xβ .- exp.(Xβ) .* data_fit.Period_length)
@@ -674,8 +664,7 @@ q₀ = vcat(raw_MLE_para.β0
             , raw_MLE_para.β_Pros_Event
             , raw_MLE_para.β_CampusTour
             , raw_MLE_para.β_DecisionDay
-            , raw_MLE_para.β_Financing
-            , raw_MLE_para.β_FinAid
+            , raw_MLE_para.β_Delay_Review
 
             , raw_MLE_high_para.β_Admit[1]
             , raw_MLE_high_para.β_home_distance[1]
@@ -695,8 +684,7 @@ q₀ = vcat(raw_MLE_para.β0
             , raw_MLE_high_para.β_Pros_Event[1]
             , raw_MLE_high_para.β_CampusTour[1]
             , raw_MLE_high_para.β_DecisionDay[1]
-            , raw_MLE_high_para.β_Financing[1] 
-            , raw_MLE_high_para.β_FinAid[1]
+            , raw_MLE_high_para.β_Delay_Review[1] 
 
             , log(1.0)
             , log(0.2) )
@@ -734,7 +722,7 @@ mean(DataFrame(results.chain,:auto)[1,:])
 chain_df = DataFrame(results.chain,:auto)
 plot(Vector(chain_df[15,:]))
 plot(Vector(chain_df[25,:]))
-#CSV.write("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/chain_2228_20221028.csv", chain_df)
+#CSV.write("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/chain_2228_20221102.csv", chain_df)
 
 print(mean(Matrix(chain_df), dims = 2))
 μ_chain_df = mean(Matrix(chain_df), dims = 2)
@@ -791,8 +779,7 @@ Xβ_fit = (β0_fit[data_fit.Period]
 .+ β_fit[data_fit.Period,16] .* data_fit.Pros_Event_Ind
 .+ β_fit[data_fit.Period,17] .* data_fit.CampusTour_Ever_Ind
 .+ β_fit[data_fit.Period,18] .* data_fit.DecisionDay_Ever_Ind
-.+ β_fit[data_fit.Period,19] .* data_fit.Financing_Started
-.+ β_fit[data_fit.Period,20] .* data_fit.FinAid_Started
+.+ β_fit[data_fit.Period,19] .* data_fit.Delay_Review_Ind
 )
 
 
