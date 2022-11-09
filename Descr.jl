@@ -64,7 +64,7 @@ n_var = 19
 n_σ = 2
 
 raw_chain = raw_chain_2208
-
+raw_chain = raw_chain_2218
 
 ```
 whether variables are important
@@ -94,7 +94,7 @@ end
 
 β_mean[1,:]
 β_mean[10,:]
-p_mtx[4,3]
+#p_mtx[4,3]
 #intval_mtx[4,3]
 #p_star_mtx[4,3]
 
@@ -102,10 +102,13 @@ p_mtx[4,3]
 #intval_df = DataFrame(hcat(1:(n_var+1),intval_mtx), :auto)
 β_tupl_df = DataFrame(hcat(1:(n_var+1),β_tupl), :auto)
 p_star_df = DataFrame(hcat(1:(n_var+1),p_star_mtx), :auto)
-#CSV.write("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/tupl_df_2208_20221107.csv", β_tupl_df)
-#CSV.write("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/p_star_df_2208_20221107.csv", p_star_df)
+#CSV.write("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/tupl_df_2218_20221107.csv", β_tupl_df)
+#CSV.write("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/p_star_df_2218_20221107.csv", p_star_df)
 
 ###CSV.write("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/intval_df_2208_20221107.csv", intval_df)
+
+findmax(p_star_mtx, dims=2)[1]
+
 
 ### Baseline
 β_test = -5.93-(-7.47)
@@ -136,8 +139,8 @@ for i in 1:(n_var+1)
 end
 
 findmax(Comp_mtx, dims=2)[1]
-Comp_df = DataFrame(hcat(1:(n_var+1),findmax(Comp_mtx, dims=2)[1], Comp_mtx), :auto)
-#CSV.write("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/Comp_df_2208_20221107.csv", Comp_df)
+Comp_df = DataFrame(hcat(1:(n_var+1), findmax(p_star_mtx, dims=2)[1], findmax(Comp_mtx, dims=2)[1], Comp_mtx), :auto)
+#CSV.write("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/Comp_df_2218_20221107.csv", Comp_df)
 
 ###CSV.write("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/Comp_intval_df_2208_20221101.csv", Comp_intval_df)
 ###CSV.write("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/z_df_2208_20221101.csv", z_df)
@@ -175,26 +178,34 @@ plot_1 = density(reshape(transpose(Array(raw_chain_2208[(sample_var*n_Period+1):
 density!(reshape(transpose(Array(raw_chain_2208[(sample_var*n_Period+8):(sample_var*n_Period+8),:])), :, 1), alpha=0.7
             , xaxis = "Loan", yaxis = "", label = "Period 8")
 
-sample_var = 5
+sample_var = 4
 plot_2 = density(reshape(transpose(Array(raw_chain_2208[(sample_var*n_Period+1):(sample_var*n_Period+1),:])), :, 1), alpha=0.7, label = "Period 1")
 density!(reshape(transpose(Array(raw_chain_2208[(sample_var*n_Period+8):(sample_var*n_Period+8),:])), :, 1), alpha=0.7
-            , xaxis = "Gender", yaxis = "", label = "Period 8",legend=false)            
+            , xaxis = "Major Change", yaxis = "", label = "Period 8",legend=false)            
 
-sample_var = 16
+sample_var = 17
 plot_3 = density(reshape(transpose(Array(raw_chain_2208[(sample_var*n_Period+1):(sample_var*n_Period+1),:])), :, 1), alpha=0.7, label = "Period 1")
 density!(reshape(transpose(Array(raw_chain_2208[(sample_var*n_Period+8):(sample_var*n_Period+8),:])), :, 1), alpha=0.7
-            , xaxis = "Early Events", yaxis = "", label = "Period 8")   
+            , xaxis = "Campus Tour", yaxis = "", label = "Period 8")   
 
-sample_var = 18
+sample_var = 2
 plot_4 = density(reshape(transpose(Array(raw_chain_2208[(sample_var*n_Period+1):(sample_var*n_Period+1),:])), :, 1), alpha=0.7, label = "Period 1")
 density!(reshape(transpose(Array(raw_chain_2208[(sample_var*n_Period+8):(sample_var*n_Period+8),:])), :, 1), alpha=0.7
-            , xaxis = "Decision Day Event", yaxis = "", label = "Period 8")  
+            , xaxis = "Home Distance", yaxis = "", label = "Period 8")  
 
 plot(plot_1,plot_2,plot_3,plot_4,layout = (2, 2), legend=false)
+
 
 #####
 # BoxPlot
 #####
+
+plot_mtx = ones(1000, n_Period)
+for j in 1:n_Period
+    plot_mtx[:,j] = vec(Matrix(raw_chain_2208[(j):(j),:]))
+end
+display(boxplot(["1" "2" "3" "4" "5" "6" "7" "8"], plot_mtx
+            , legend=false, xaxis="Period", yaxis="Baseline"; palette = :grayC) )
 
 var_name = ["β_Admit", "β_home_distance", "β_Admit_Honor", "β_Diff_Major", "β_Gender", "β_inst_grant", "β_loan", "β_fed_efc", "β_Pell", 
             "β_ASIAN", "β_BLACK", "β_HISPA", "β_WHITE", "β_Multi", "β_Postcard", "β_Pros_Event", "β_CampusTour", "β_DecisionDay", "β_Delay_Review"]
