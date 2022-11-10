@@ -65,6 +65,7 @@ n_σ = 2
 
 raw_chain = raw_chain_2208
 raw_chain = raw_chain_2218
+raw_chain = raw_chain_2228
 
 ```
 whether variables are important
@@ -102,8 +103,8 @@ end
 #intval_df = DataFrame(hcat(1:(n_var+1),intval_mtx), :auto)
 β_tupl_df = DataFrame(hcat(1:(n_var+1),β_tupl), :auto)
 p_star_df = DataFrame(hcat(1:(n_var+1),p_star_mtx), :auto)
-#CSV.write("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/tupl_df_2218_20221107.csv", β_tupl_df)
-#CSV.write("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/p_star_df_2218_20221107.csv", p_star_df)
+#CSV.write("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/tupl_df_2228_20221107.csv", β_tupl_df)
+#CSV.write("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/p_star_df_2228_20221107.csv", p_star_df)
 
 ###CSV.write("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/intval_df_2208_20221107.csv", intval_df)
 
@@ -140,7 +141,7 @@ end
 
 findmax(Comp_mtx, dims=2)[1]
 Comp_df = DataFrame(hcat(1:(n_var+1), findmax(p_star_mtx, dims=2)[1], findmax(Comp_mtx, dims=2)[1], Comp_mtx), :auto)
-#CSV.write("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/Comp_df_2218_20221107.csv", Comp_df)
+#CSV.write("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/Comp_df_2228_20221107.csv", Comp_df)
 
 ###CSV.write("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/Comp_intval_df_2208_20221101.csv", Comp_intval_df)
 ###CSV.write("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/z_df_2208_20221101.csv", z_df)
@@ -202,7 +203,7 @@ plot(plot_1,plot_2,plot_3,plot_4,layout = (2, 2), legend=false)
 
 plot_mtx = ones(1000, n_Period)
 for j in 1:n_Period
-    plot_mtx[:,j] = vec(Matrix(raw_chain_2208[(j):(j),:]))
+    plot_mtx[:,j] = vec(Matrix(raw_chain_2228[(j):(j),:]))
 end
 display(boxplot(["1" "2" "3" "4" "5" "6" "7" "8"], plot_mtx
             , legend=false, xaxis="Period", yaxis="Baseline"; palette = :grayC) )
