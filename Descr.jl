@@ -221,4 +221,23 @@ for i in 1:n_var
                 , legend=false, xaxis="Period", yaxis=var_name[i]; palette = :grayC) )
 end
 
+```
+Comparison among three falls
+```
 
+β_mean_1 = ones(n_var+1,n_Period)
+β_mean_2 = ones(n_var+1,n_Period)
+β_mean_3 = ones(n_var+1,n_Period)
+
+for i in 1:(n_var+1)
+    for j in 1:n_Period
+        β_mean_1[i,j] = round(mean(vec(Matrix(raw_chain_2208[((i-1)*n_Period+j):((i-1)*n_Period+j),:]))); digits=2)
+        β_mean_2[i,j] = round(mean(vec(Matrix(raw_chain_2218[((i-1)*n_Period+j):((i-1)*n_Period+j),:]))); digits=2)
+        β_mean_3[i,j] = round(mean(vec(Matrix(raw_chain_2228[((i-1)*n_Period+j):((i-1)*n_Period+j),:]))); digits=2)
+    end
+end
+
+plot(1:n_Period, β_mean_1[1,:], label="Fall 2020")
+plot!(1:n_Period, β_mean_2[1,:], label="Fall 2021")
+plot!(1:n_Period, β_mean_3[1,:], label="Fall 2022"
+        , legend = :topleft, xaxis="Period", yaxis = "Baseline Force")

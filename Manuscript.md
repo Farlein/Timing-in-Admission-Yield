@@ -135,8 +135,13 @@ Seven variables have time-independent effects, and they are Home Distance, Honor
 Three variables do not have important impact on deposit decisions, and they are Institutional Grant, Asian, African American and Multi-Ethnic. This is similar with either 2020 or 2021.
 
 ### Comparison Among the Three Falls
-The baseline force shows the same trend for the three falls, i.e., the force gradually increases to the strongest in the last period. This is within expectation, because students would like to compare institutions' admission offers but they do not want to miss the deadline for deposits.   
+The baseline force shows an increasing trend for the three falls, i.e., the force gradually increases to the strongest in the last period. This is within expectation, because students would like to compare institutions' admission offers but they do not want to miss the deadline for deposits. The actual path to the strongest effect differs. In 2020, the baseline force remains relatively stable in the first 6 periods except for period 2, and then increases in the last two weeks. In 2021, after the increase from period 1, the baseline force fluctuates in the first seven periods before the increase in the last period. In 2022, the baseline force increases from the first period, stays relative stable, and then increases in the last two weeks.
 
+The variable pool with time-varying effect is very consistent in the three years. Female students tend to pay deposits earlier than male students, since the parameter estimate of Gender has an increasing trend, indicating . Pell Eligibility does not matter in most periods before becoming a positive factor in the last periods, because Pell students tend to postpone any financial expense as much as possible. Receiving postcards does not seem to encourage students to pay deposits, since the parameter estimates of Postcard tend to be negative. Students are more likely to pay deposits if attending early events for prospects, but the effects decrease over periods. This makes sense if we think the events act as impulse force to encourage students to pay deposits, so the effects are the strongest when the force is applied and then decrease over time. This also applies to the encouragement from the Decision Day events. There are multiple Decision Day events in Februaries and Aprils. The effect increases in the periods with events and then decreases until the next event happens. Delaying to review admission decision online is not a good sign for paying deposits, especially in the early periods. The effect decreases in the later periods, because students could response to the mailed decisions.
+
+
+
+[Insert Figure 3 Here]
 
 Comparison among the three years
     Common patterns
