@@ -19,6 +19,8 @@ using FreqTables, StatsBase
 
 using HypothesisTests
 
+using Random, Distributions
+
 ```
 Load raw data
 
@@ -427,6 +429,54 @@ confint(OneSampleZTest(vec(Matrix(raw_chain[((4-1)*n_Period+3):((4-1)*n_Period+3
 
 boxplot(x)
 
+
+###
+
+plot_mtx = ones(1000, n_Period)
+for j in 1:n_Period
+    plot_mtx[:,j] = vec(Matrix(raw_chain_2228[(j):(j),:]))
+end
+display(boxplot(["1" "2" "3" "4" "5" "6" "7" "8"], plot_mtx
+            , legend=false, xaxis="Period", yaxis="Baseline"; palette = :grayC) )
+
+d = Normal()
+test_1 = rand(d, 100)
+test_2 = rand(d, 100)
+test_3 = rand(d, 100)
+
+test_df = DataFrame(y=vcat(test_1,test_2,test_3), z=repeat(["2020"; "2021"; "2022"], inner=100))
+gr()
+@df test_df boxplot(
+    :y,
+    #group=:z
+)
+@df test_df boxplot(
+    :z,
+    :y
+)
+
+test_df_1 = DataFrame(x=repeat(1:8,inner=100), y=repeat(test_1, 8))
+test_df_2 = DataFrame(x=repeat([1.1,2.1,3.1,4.1,5.1,6.1,7.1,8.1],inner=100), y=repeat(test_2, 8))
+@df test_df_1 boxplot(
+    :x, :y,
+    bar_width = 0.1
+)
+@df test_df_2 boxplot!(
+    :x, :y,
+    bar_width = 0.1
+)
+
+boxplot([0.9, 1.9, 2.9, 3.9, 4.9, 5.9, 6.9, 7.9], repeat(test_1,8), xlims = (0,9), bar_width = 0.1)
+boxplot!([1, 2, 3, 4, 5, 6, 7, 8], repeat(test_1,8), xlims = (0,9), bar_width = 0.1)
+boxplot!([1.1, 2.1, 3.1, 4.1, 5.1, 6.1, 7.1, 8.1], repeat(test_1,8), xlims = (0,9), bar_width = 0.1)
+boxplot!(["1","2"],)
+
+boxplot(["0.5"], test_1)
+boxplot!(["1"], test_2)
+boxplot!(["1.5"], test_3)
+
+boxplot(["1.1","2.1"], repeat(test_1,2)
+        , xlims = (0,9), bar_width = 0.1)
 ##############
 
 i_test = 10
@@ -450,3 +500,25 @@ quantile(d_rdm, 0.975)
 OneSampleZTest(d_rdm, 0.0)
 
 percentile(d_rdm,2.5)
+
+
+```
+Comparison among three falls
+```
+
+β_mean_1 = ones(n_var+1,n_Period)
+β_mean_2 = ones(n_var+1,n_Period)
+β_mean_3 = ones(n_var+1,n_Period)
+
+for i in 1:(n_var+1)
+    for j in 1:n_Period
+        β_mean_1[i,j] = round(mean(vec(Matrix(raw_chain_2208[((i-1)*n_Period+j):((i-1)*n_Period+j),:]))); digits=2)
+        β_mean_2[i,j] = round(mean(vec(Matrix(raw_chain_2218[((i-1)*n_Period+j):((i-1)*n_Period+j),:]))); digits=2)
+        β_mean_3[i,j] = round(mean(vec(Matrix(raw_chain_2228[((i-1)*n_Period+j):((i-1)*n_Period+j),:]))); digits=2)
+    end
+end
+
+plot(1:n_Period, β_mean_1[1,:], label="Fall 2020")
+plot!(1:n_Period, β_mean_2[1,:], label="Fall 2021")
+plot!(1:n_Period, β_mean_3[1,:], label="Fall 2022"
+        , legend = :topleft, xaxis="Period", yaxis = "Baseline Force")

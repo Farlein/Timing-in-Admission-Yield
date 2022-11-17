@@ -19,7 +19,7 @@ using DataFrames
 
 using FreqTables, StatsBase
 
-#using JuMP, Ipopt
+using JuMP, Ipopt
 
 using TransformVariables, LogDensityProblems, DynamicHMC, DynamicHMC.Diagnostics
 using MCMCDiagnostics

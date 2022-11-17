@@ -144,7 +144,94 @@ u = 10 .* ones(n_Period)
 @variable(surv_fit, l[i] <= β0[i = 1:n_Period] <= u[i])
 #@variable(surv_fit, β0[i = 1:n_Period] )
 
-n_var = 20
+n_var = 17
+l_β = -10 .* ones(n_var)  
+u_β = 10 .* ones(n_var)  
+@variable(surv_fit, l_β[i] <= β[i = 1:n_Period, 1:n_var] <= u_β[i])
+
+@NLexpression(
+    surv_fit,
+    Xβ[i = 1:n_fit], β0[data_fit.Period[i]] 
+                        + β[data_fit.Period[i],1] * data_fit.inst_grant_rate[i]
+                       # + β[data_fit.Period[i],2] * data_fit.student_loan_rate[i]
+                        + β[data_fit.Period[i],2] * data_fit.fed_efc_rate[i]
+                       # + β[data_fit.Period[i],3] * data_fit.Financing_Started[i]
+                        + β[data_fit.Period[i],3] * data_fit.Pell_Ind[i]
+                        + β[data_fit.Period[i],4] * data_fit.home_distance_std[i]
+                        
+
+    )
+
+#=       
+@NLconstraint(
+    surv_fit, [i = 1:n_fit], 
+    Xβ[i] >= 1e-4
+)
+
+### λ[i] = Xβ[i]
+@NLobjective(
+    surv_fit,
+        Max,
+        sum( data_fit.Dpst_Ind[i]*log(Xβ[i]) - Xβ[i]*data_fit.Period_length[i]  for i = 1:n_fit)
+    )
+=#
+
+### λ[i] = exp(Xβ[i])
+
+#r = 0.00001
+r = 0
+@NLobjective(
+    surv_fit,
+        Min,
+        -sum( data_fit.Dpst_Ind[i]*Xβ[i] - exp(Xβ[i])*data_fit.Period_length[i]  for i = 1:n_fit) / n_fit
+        + r * sum( (β[j,k])^2  for j = 1:n_Period, k = 1:n_var)
+        
+             
+    )
+
+#print(surv_test)
+
+optimize!(surv_fit)
+
+termination_status(surv_fit)
+objective_value(surv_fit)
+
+value.(β0)
+value.(β)
+
+print(value.(β0))
+
+
+para_df = DataFrame(
+    β0 = value.(β0)
+    , β_inst_grant = value.(β)[:,1]
+    #, β_loan = value.(β)[:,2]
+    , β_fed_efc = value.(β)[:,2]
+    #, β_Financing = value.(β)[:,3]
+    , β_Pell = value.(β)[:,3]
+    , β_home = value.(β)[:,4]
+
+)
+
+print(para_df)
+
+###############################
+
+```
+Period 1 to Period 8
+Only non-resident
+Piece-wise exponential
+MLE model without regulation
+```
+
+surv_fit = Model(Ipopt.Optimizer)
+
+l = -10 .* ones(n_Period)  
+u = 10 .* ones(n_Period)  
+@variable(surv_fit, l[i] <= β0[i = 1:n_Period] <= u[i])
+#@variable(surv_fit, β0[i = 1:n_Period] )
+
+n_var = 17
 l_β = -10 .* ones(n_var)  
 u_β = 10 .* ones(n_var)  
 @variable(surv_fit, l_β[i] <= β[i = 1:n_Period, 1:n_var] <= u_β[i])
@@ -159,29 +246,19 @@ u_β = 10 .* ones(n_var)
                         + β[data_fit.Period[i],5] * data_fit.Gender_Ind[i]
                         + β[data_fit.Period[i],6] * data_fit.inst_grant_rate[i]
                         + β[data_fit.Period[i],7] * data_fit.student_loan_rate[i]
-                        + β[data_fit.Period[i],8] * data_fit.fed_efc_rate[i]
-                        + β[data_fit.Period[i],9] * data_fit.Pell_Ind[i]
-                        + β[data_fit.Period[i],10] * data_fit.Eth_ASIAN_Ind[i]
-                        + β[data_fit.Period[i],11] * data_fit.Eth_BLACK_Ind[i]
-                        + β[data_fit.Period[i],12] * data_fit.Eth_HISPA_Ind[i]
-                        + β[data_fit.Period[i],13] * data_fit.Eth_WHITE_Ind[i]
-                        + β[data_fit.Period[i],14] * data_fit.Eth_Multi_Ind[i]
-                        + β[data_fit.Period[i],15] * data_fit.Delay_Review_Ind[i]
-                        + β[data_fit.Period[i],16] * data_fit.Postcard_Ind[i]
-                        + β[data_fit.Period[i],17] * data_fit.Pros_Event_Ind[i]
-                        + β[data_fit.Period[i],18] * data_fit.CampusTour_Ever_Ind[i]
-                        + β[data_fit.Period[i],19] * data_fit.DecisionDay_Ever_Ind[i]
-                        + β[data_fit.Period[i],20] * data_fit.Financing_Started[i]
-#=                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        + β[data_fit.Period[i],21] * data_fit.FinAid_Started[i]                     
-                        
-=#
+                        #+ β[data_fit.Period[i],8] * data_fit.fed_efc_rate[i]
+                        + β[data_fit.Period[i],8] * data_fit.Pell_Ind[i]
+                        + β[data_fit.Period[i],9] * data_fit.Eth_ASIAN_Ind[i]
+                        + β[data_fit.Period[i],10] * data_fit.Eth_BLACK_Ind[i]
+                        + β[data_fit.Period[i],11] * data_fit.Eth_HISPA_Ind[i]
+                        + β[data_fit.Period[i],12] * data_fit.Eth_WHITE_Ind[i]
+                        + β[data_fit.Period[i],13] * data_fit.Eth_Multi_Ind[i]
+                        #+ β[data_fit.Period[i],14] * data_fit.Postcard_Ind[i]
+                        + β[data_fit.Period[i],14] * data_fit.Pros_Event_Ind[i]
+                        + β[data_fit.Period[i],15] * data_fit.CampusTour_Ever_Ind[i]
+                        + β[data_fit.Period[i],16] * data_fit.DecisionDay_Ever_Ind[i]
+                        + β[data_fit.Period[i],17] * data_fit.Delay_Review_Ind[i]
+
     )
 
 #=       
@@ -235,34 +312,23 @@ para_df = DataFrame(
     , β_Gender = value.(β)[:,5]
     , β_inst_grant = value.(β)[:,6]
     , β_loan = value.(β)[:,7]
-    , β_fed_efc = value.(β)[:,8]
-    , β_Pell = value.(β)[:,9]
-    , β_ASIAN = value.(β)[:,10]
-    , β_BLACK = value.(β)[:,11]
-    , β_HISPA = value.(β)[:,12]
-    , β_WHITE = value.(β)[:,13]
-    , β_Multi = value.(β)[:,14]
-    , β_Delay_Review = value.(β)[:,15]
-    , β_Postcard = value.(β)[:,16]
-    , β_Pros_Event = value.(β)[:,17]
-    , β_CampusTour = value.(β)[:,18]
-    , β_DecisionDay = value.(β)[:,19]
-    , β_Financing = value.(β)[:,20]
-
-#=    
-        
-    
-    
-    
-    
-    , β_FinAid = value.(β)[:,21]
-   
-    =#
+    #, β_fed_efc = value.(β)[:,8]
+    , β_Pell = value.(β)[:,8]
+    , β_ASIAN = value.(β)[:,9]
+    , β_BLACK = value.(β)[:,10]
+    , β_HISPA = value.(β)[:,11]
+    , β_WHITE = value.(β)[:,12]
+    , β_Multi = value.(β)[:,13]
+    #, β_Postcard = value.(β)[:,14]
+    , β_Pros_Event = value.(β)[:,14]
+    , β_CampusTour = value.(β)[:,15]
+    , β_DecisionDay = value.(β)[:,16]
+    , β_Delay_Review = value.(β)[:,17]
 )
 
 print(para_df)
 
-#CSV.write("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/para_2228_20221028.csv", para_df)
+#CSV.write("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/para_2228_20221102.csv", para_df)
 
 # para_df = CSV.read("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/para_2208_Baseline_20220628.csv", DataFrame)
 
@@ -313,8 +379,7 @@ Xβ_fit = (β0_fit[data_fit.Period]
 .+ β_fit[data_fit.Period,16] .* data_fit.Pros_Event_Ind
 .+ β_fit[data_fit.Period,17] .* data_fit.CampusTour_Ever_Ind
 .+ β_fit[data_fit.Period,18] .* data_fit.DecisionDay_Ever_Ind
-.+ β_fit[data_fit.Period,19] .* data_fit.Financing_Started
-.+ β_fit[data_fit.Period,20] .* data_fit.FinAid_Started
+.+ β_fit[data_fit.Period,19] .* data_fit.Delay_Review_Ind
 
 )
 

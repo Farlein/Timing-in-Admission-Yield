@@ -225,19 +225,44 @@ end
 Comparison among three falls
 ```
 
-β_mean_1 = ones(n_var+1,n_Period)
-β_mean_2 = ones(n_var+1,n_Period)
-β_mean_3 = ones(n_var+1,n_Period)
-
-for i in 1:(n_var+1)
-    for j in 1:n_Period
-        β_mean_1[i,j] = round(mean(vec(Matrix(raw_chain_2208[((i-1)*n_Period+j):((i-1)*n_Period+j),:]))); digits=2)
-        β_mean_2[i,j] = round(mean(vec(Matrix(raw_chain_2218[((i-1)*n_Period+j):((i-1)*n_Period+j),:]))); digits=2)
-        β_mean_3[i,j] = round(mean(vec(Matrix(raw_chain_2228[((i-1)*n_Period+j):((i-1)*n_Period+j),:]))); digits=2)
-    end
+plot_mtx_1 = ones(n_Period, 1000)
+plot_mtx_2 = ones(n_Period, 1000)
+plot_mtx_3 = ones(n_Period, 1000)
+for j in 1:n_Period
+    plot_mtx_1[j,:] = vec(Matrix(raw_chain_2208[(j):(j),:]))
+    plot_mtx_2[j,:] = vec(Matrix(raw_chain_2218[(j):(j),:]))
+    plot_mtx_3[j,:] = vec(Matrix(raw_chain_2228[(j):(j),:]))
 end
+boxplot([0.8, 1.8, 2.8, 3.8, 4.8, 5.8, 6.8, 7.8], vec(plot_mtx_1)
+            , xaxis="Period", yaxis="Baseline", label="2020", bar_width = 0.2, seriescolor=:gray50)
+boxplot!([1, 2, 3, 4, 5, 6, 7, 8], vec(plot_mtx_2)
+            , xaxis="Period", yaxis="Baseline", label="2021", bar_width = 0.2, seriescolor=:gray75)            
+boxplot!([1.2, 2.2, 3.2, 4.2, 5.2, 6.2, 7.2, 8.2], vec(plot_mtx_3)
+            , xaxis="Period", yaxis="Baseline", label="2022", bar_width = 0.2, seriescolor=:gray100
+            , legend=:topleft, xticks=0:1:9)    
 
-plot(1:n_Period, β_mean_1[1,:], label="Fall 2020")
-plot!(1:n_Period, β_mean_2[1,:], label="Fall 2021")
-plot!(1:n_Period, β_mean_3[1,:], label="Fall 2022"
-        , legend = :topleft, xaxis="Period", yaxis = "Baseline Force")
+
+            
+var_name = ["β_Admit", "β_home_distance", "β_Admit_Honor", "β_Diff_Major", "β_Gender", "β_inst_grant", "β_loan", "β_fed_efc", "β_Pell", 
+"β_ASIAN", "β_BLACK", "β_HISPA", "β_WHITE", "β_Multi", "β_Postcard", "β_Pros_Event", "β_CampusTour", "β_DecisionDay", "β_Delay_Review"]
+
+
+for i in 1:n_var
+    plot_mtx_1 = ones(n_Period, 1000)
+    plot_mtx_2 = ones(n_Period, 1000)
+    plot_mtx_3 = ones(n_Period, 1000)
+    for j in 1:n_Period
+        plot_mtx_1[j,:] = vec(Matrix(raw_chain_2208[(i*n_Period+j):(i*n_Period+j),:]))
+        plot_mtx_2[j,:] = vec(Matrix(raw_chain_2218[(i*n_Period+j):(i*n_Period+j),:]))
+        plot_mtx_3[j,:] = vec(Matrix(raw_chain_2228[(i*n_Period+j):(i*n_Period+j),:]))
+    end
+
+    boxplot([0.8, 1.8, 2.8, 3.8, 4.8, 5.8, 6.8, 7.8], vec(plot_mtx_1)
+            , xaxis="Period", yaxis=var_name[i], label="2020", bar_width = 0.2, seriescolor=:gray50) 
+    boxplot!([1, 2, 3, 4, 5, 6, 7, 8], vec(plot_mtx_2)
+            , xaxis="Period", yaxis=var_name[i], label="2021", bar_width = 0.2, seriescolor=:gray75) 
+    display(boxplot!([1.2, 2.2, 3.2, 4.2, 5.2, 6.2, 7.2, 8.2], vec(plot_mtx_3)
+            , xaxis="Period", yaxis=var_name[i], label="2022", bar_width = 0.2, seriescolor=:gray100
+            , legend=:outertopright, xticks=0:1:9) )
+
+end
