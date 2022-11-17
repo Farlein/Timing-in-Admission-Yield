@@ -2,130 +2,6 @@
 
 
 
-```
-Load packages
-```
-# using Turing, Random 
-
-# using DifferentialEquations, DiffEqBayes
-
-# using MCMCChains, Distributions
-
-using Random, Distributions
-
-using Plots, StatsPlots
-
-using CSV
-
-using DataFrames
-
-using FreqTables, StatsBase
-
-using JuMP, Ipopt
-
-
-
-```
-Load raw data
-
-```
-
-###
-#raw = CSV.read("C:/Users/chuanc/University of Delaware - o365/Team-IRE-Staff Shares - chuanc - chuanc/Project/02_Analytical/20200102 ADM_Yield/Data/for_julia_2208_20221027.csv", DataFrame)
-#raw = CSV.read("C:/Users/chuanc/University of Delaware - o365/Team-IRE-Staff Shares - chuanc - chuanc/Project/02_Analytical/20200102 ADM_Yield/Data/for_julia_2218_20221027.csv", DataFrame)
-raw = CSV.read("C:/Users/chuanc/University of Delaware - o365/Team-IRE-Staff Shares - chuanc - chuanc/Project/02_Analytical/20200102 ADM_Yield/Data/for_julia_2228_20221027.csv", DataFrame)
-
-#raw = CSV.read("H:/My Drive/FSAN/5_Adm Yield Proj/Data/for_julia_2228_20220615.csv", DataFrame)
-
-
-hcat(1:ncol(raw), names(raw))
-#print(hcat(1:ncol(raw), names(raw)))
-#display(hcat(1:ncol(raw), names(raw)))
-unique(raw.Apply_Term)
-
-#raw_source = raw[ (raw.Apply_Term .== "Fall 2020") .& (raw.Resid_Ind .== 0), :]
-#raw_source = raw[ (raw.Apply_Term .== "Fall 2021") .& (raw.Resid_Ind .== 0), :]
-raw_source = raw[ (raw.Resid_Ind .== 0), :]
-
-dpst_source = combine(groupby(raw_source, :Period), :Dpst_Ind => sum)
-bar(dpst_source.Period, dpst_source.Dpst_Ind_sum, label = "")
-
-
-#=
-Periods:
-
-1: Feb 1 to Feb 28/29
-2: Mar 1 to Mar 15
-3: Mar 15 to Mar 31
-4: Apr 1 to Apr 7
-5: Apr 8 to Apr 14
-6: Apr 15 to Apr 21
-7: Apr 22 to Apr 28
-8: Apr 29 to May 1
-
-=#
-
-
-```
-Data Management
-```
-
-#data_fit = raw_source[( 2 .<= raw_source.Period .<= 9 ), :]
-data_fit = raw_source
-unique(data_fit.Period)
-
-# numeric variable
-
-n_Period = 8
-n_fit = size(data_fit)[1]
-
-#=
-data_fit.Delay_Review_Ind = zeros(nrow(data_fit))
-for i in eachindex(data_fit.Delay_Review_Decision)
-    if data_fit.Delay_Review_Decision[i] >= 2
-        data_fit.Delay_Review_Ind[i] = 1
-        else data_fit.Delay_Review_Ind[i] = 0
-    end
-end
-=#
-
-maximum(data_fit.Delay_Review_Ind)
-minimum(data_fit.Delay_Review_Ind)
-median(data_fit.Delay_Review_Ind)
-mean(data_fit.Delay_Review_Ind)
-
-function cc_standardize(var_seq, var_name)
-
-    for i in 1:n_Period
-        var_temp = (data_fit[ data_fit.Period .==i , var_seq] .- mean(data_fit[ data_fit.Period .==i , var_seq]) ) ./ std(data_fit[ data_fit.Period .==i , var_seq])
-        join_key = data_fit[ data_fit.Period .==i , [2,3]]
-        if i == 1
-            var_name = hcat(join_key, var_temp)
-            else var_name = vcat(var_name, hcat(join_key, var_temp))
-        end
-    end
-    
-    var_name
-end
-
-print(hcat(1:38, names(data_fit)))
-
-#=
-hs_gpa_std = []
-hs_gpa_std = cc_standardize(10, hs_gpa_std)
-rename!(hs_gpa_std,:x1 => :hs_gpa_std)
-data_fit = innerjoin(data_fit, hs_gpa_std, on = [:Student_ID => :Student_ID, :Period => :Period])
-combine(groupby(data_fit, :Period), :hs_gpa_std => mean)
-combine(groupby(data_fit, :Period), :hs_gpa_std => std)
-=#
-
-home_distance_std = []
-home_distance_std = cc_standardize(11, home_distance_std)
-rename!(home_distance_std,:x1 => :home_distance_std)
-data_fit = innerjoin(data_fit, home_distance_std, on = [:Student_ID => :Student_ID, :Period => :Period])
-combine(groupby(data_fit, :Period), :home_distance_std => mean)
-combine(groupby(data_fit, :Period), :home_distance_std => std)
-
 
 
 ###############################
@@ -144,7 +20,7 @@ u = 10 .* ones(n_Period)
 @variable(surv_fit, l[i] <= β0[i = 1:n_Period] <= u[i])
 #@variable(surv_fit, β0[i = 1:n_Period] )
 
-n_var = 17
+n_var = 16
 l_β = -10 .* ones(n_var)  
 u_β = 10 .* ones(n_var)  
 @variable(surv_fit, l_β[i] <= β[i = 1:n_Period, 1:n_var] <= u_β[i])
@@ -153,9 +29,7 @@ u_β = 10 .* ones(n_var)
     surv_fit,
     Xβ[i = 1:n_fit], β0[data_fit.Period[i]] 
                         + β[data_fit.Period[i],1] * data_fit.FinAid_Rate[i]
-                       # + β[data_fit.Period[i],2] * data_fit.student_loan_rate[i]
                         + β[data_fit.Period[i],2] * data_fit.fed_efc_rate[i]
-                       # + β[data_fit.Period[i],3] * data_fit.Financing_Started[i]
                         + β[data_fit.Period[i],3] * data_fit.Pell_Ind[i]
                         + β[data_fit.Period[i],4] * data_fit.home_distance_std[i]
                         + β[data_fit.Period[i],5] * data_fit.Admit_Honor_Ind[i]
@@ -170,10 +44,7 @@ u_β = 10 .* ones(n_var)
                         + β[data_fit.Period[i],14] * data_fit.CampusTour_Ever_Ind[i]
                         + β[data_fit.Period[i],15] * data_fit.DecisionDay_Ever_Ind[i]
                         + β[data_fit.Period[i],16] * data_fit.Delay_Review_Ind[i]
-                        #+ β[data_fit.Period[i],17] * data_fit.Loan_Ind[i]
-                        
-
-    )
+)
 
 #=       
 @NLconstraint(
