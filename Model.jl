@@ -94,6 +94,10 @@ for i in eachindex(data_fit.Delay_Review_Decision)
 end
 =#
 
+
+data_fit.FinAid_Rate = data_fit.inst_grant_rate .+ data_fit.student_loan_rate
+
+
 maximum(data_fit.Delay_Review_Ind)
 minimum(data_fit.Delay_Review_Ind)
 median(data_fit.Delay_Review_Ind)
@@ -113,7 +117,7 @@ function cc_standardize(var_seq, var_name)
     var_name
 end
 
-print(hcat(1:38, names(data_fit)))
+print(hcat(1:39, names(data_fit)))
 
 #=
 hs_gpa_std = []
