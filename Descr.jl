@@ -28,9 +28,9 @@ raw = CSV.read("C:/Users/chuanc/University of Delaware - o365/Team-IRE-Staff Sha
 raw = CSV.read("C:/Users/chuanc/University of Delaware - o365/Team-IRE-Staff Shares - chuanc - chuanc/Project/02_Analytical/20200102 ADM_Yield/Data/for_julia_2218_20220816.csv", DataFrame)
 raw = CSV.read("C:/Users/chuanc/University of Delaware - o365/Team-IRE-Staff Shares - chuanc - chuanc/Project/02_Analytical/20200102 ADM_Yield/Data/for_julia_2228_20220816.csv", DataFrame)
 
-raw_chain_2208 = CSV.read("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/chain_2208_20221102.csv", DataFrame)
-raw_chain_2218 = CSV.read("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/chain_2218_20221102.csv", DataFrame)
-raw_chain_2228 = CSV.read("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/chain_2228_20221102.csv", DataFrame)
+raw_chain_2208 = CSV.read("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/chain_2208_20221123.csv", DataFrame)
+raw_chain_2218 = CSV.read("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/chain_2218_20221123.csv", DataFrame)
+raw_chain_2228 = CSV.read("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/chain_2228_20221123.csv", DataFrame)
 
 
 
@@ -208,9 +208,10 @@ end
 display(boxplot(["1" "2" "3" "4" "5" "6" "7" "8"], plot_mtx
             , legend=false, xaxis="Period", yaxis="Baseline"; palette = :grayC) )
 
-var_name = ["β_Admit", "β_home_distance", "β_Admit_Honor", "β_Diff_Major", "β_Gender", "β_inst_grant", "β_loan", "β_fed_efc", "β_Pell", 
-            "β_ASIAN", "β_BLACK", "β_HISPA", "β_WHITE", "β_Multi", "β_Postcard", "β_Pros_Event", "β_CampusTour", "β_DecisionDay", "β_Delay_Review"]
+raw_chain = raw_chain_2228
 
+var_name = ["β_FinAid", "β_Pell", "β_efc", "β_home", "β_Gender", "β_ASIAN", "β_BLACK", "β_HISPA", "β_WHITE", "β_Multi",
+           "β_Pros_Event", "β_Admit_Honor", "β_Diff_Major", "β_CampusTour", "β_DecisionDay","β_Delay_Review"]
 
 for i in 1:n_var
     plot_mtx = ones(1000, n_Period)

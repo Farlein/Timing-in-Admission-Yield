@@ -20,7 +20,7 @@ u = 10 .* ones(n_Period)
 @variable(surv_fit, l[i] <= β0[i = 1:n_Period] <= u[i])
 #@variable(surv_fit, β0[i = 1:n_Period] )
 
-n_var = 16
+n_var = 17
 l_β = -10 .* ones(n_var)  
 u_β = 10 .* ones(n_var)  
 @variable(surv_fit, l_β[i] <= β[i = 1:n_Period, 1:n_var] <= u_β[i])
@@ -28,7 +28,8 @@ u_β = 10 .* ones(n_var)
 @NLexpression(
     surv_fit,
     Xβ[i = 1:n_fit], β0[data_fit.Period[i]] 
-                        + β[data_fit.Period[i],1] * data_fit.FinAid_Rate[i]
+                        #+ β[data_fit.Period[i],1] * data_fit.FinAid_Rate[i]
+                        + β[data_fit.Period[i],1] * data_fit.inst_grant_rate[i]
                         + β[data_fit.Period[i],2] * data_fit.fed_efc_rate[i]
                         + β[data_fit.Period[i],3] * data_fit.Pell_Ind[i]
                         + β[data_fit.Period[i],4] * data_fit.home_distance_std[i]
@@ -44,6 +45,7 @@ u_β = 10 .* ones(n_var)
                         + β[data_fit.Period[i],14] * data_fit.CampusTour_Ever_Ind[i]
                         + β[data_fit.Period[i],15] * data_fit.DecisionDay_Ever_Ind[i]
                         + β[data_fit.Period[i],16] * data_fit.Delay_Review_Ind[i]
+                        + β[data_fit.Period[i],17] * data_fit.Non_IG_Rate[i]
 )
 
 #=       
@@ -89,9 +91,8 @@ print(value.(β0))
 
 para_df = DataFrame(
     β0 = value.(β0)
-    #, β_inst_grant = value.(β)[:,1]
     , β_FinAid = value.(β)[:,1]
-    #, β_loan = value.(β)[:,2]
+    #, β_inst_grant = value.(β)[:,1]
     , β_fed_efc = value.(β)[:,2]
     #, β_Financing = value.(β)[:,3]
     , β_Pell = value.(β)[:,3]
@@ -109,6 +110,7 @@ para_df = DataFrame(
     , β_DecisionDay = value.(β)[:,15]
     , β_Delay_Review = value.(β)[:,16]
     #, β_loan = value.(β)[:,17]
+    , β_non_IG = value.(β)[:,17]
 
 )
 
