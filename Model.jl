@@ -36,9 +36,9 @@ Load raw data
 ```
 
 ###
-#raw = CSV.read("C:/Users/chuanc/University of Delaware - o365/Team-IRE-Staff Shares - chuanc - chuanc/Project/02_Analytical/20200102 ADM_Yield/Data/for_julia_2208_20221123.csv", DataFrame)
+raw = CSV.read("C:/Users/chuanc/University of Delaware - o365/Team-IRE-Staff Shares - chuanc - chuanc/Project/02_Analytical/20200102 ADM_Yield/Data/for_julia_2208_20221123.csv", DataFrame)
 #raw = CSV.read("C:/Users/chuanc/University of Delaware - o365/Team-IRE-Staff Shares - chuanc - chuanc/Project/02_Analytical/20200102 ADM_Yield/Data/for_julia_2218_20221123.csv", DataFrame)
-raw = CSV.read("C:/Users/chuanc/University of Delaware - o365/Team-IRE-Staff Shares - chuanc - chuanc/Project/02_Analytical/20200102 ADM_Yield/Data/for_julia_2228_20221123.csv", DataFrame)
+#raw = CSV.read("C:/Users/chuanc/University of Delaware - o365/Team-IRE-Staff Shares - chuanc - chuanc/Project/02_Analytical/20200102 ADM_Yield/Data/for_julia_2228_20221123.csv", DataFrame)
 
 #raw = CSV.read("H:/My Drive/FSAN/5_Adm Yield Proj/Data/for_julia_2228_20220615.csv", DataFrame)
 
@@ -279,7 +279,7 @@ para_df = DataFrame(
 
 print(para_df)
 
-#CSV.write("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/para_2228_high_20221123.csv", para_df)
+#CSV.write("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/para_2208_high_20221123.csv", para_df)
 
 # para_df = CSV.read("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/para_2208_Baseline_20220628.csv", DataFrame)
 
@@ -433,7 +433,7 @@ para_df = DataFrame(
 
 print(para_df)
 
-#CSV.write("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/para_2228_20221123.csv", para_df)
+#CSV.write("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/para_2208_20221123.csv", para_df)
 
 # para_df = CSV.read("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/para_2208_Baseline_20220628.csv", DataFrame)
 
@@ -494,12 +494,12 @@ Hierarchical
 Dynamic σ
 ```
 
-#raw_MLE_para = CSV.read("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/para_2208_20221123.csv", DataFrame)
-#raw_MLE_high_para = CSV.read("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/para_2208_high_20221123.csv", DataFrame)
+raw_MLE_para = CSV.read("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/para_2208_20221123.csv", DataFrame)
+raw_MLE_high_para = CSV.read("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/para_2208_high_20221123.csv", DataFrame)
 #raw_MLE_para = CSV.read("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/para_2218_20221123.csv", DataFrame)
 #raw_MLE_high_para = CSV.read("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/para_2218_high_20221123.csv", DataFrame)
-raw_MLE_para = CSV.read("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/para_2228_20221123.csv", DataFrame)
-raw_MLE_high_para = CSV.read("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/para_2228_high_20221123.csv", DataFrame)
+#raw_MLE_para = CSV.read("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/para_2228_20221123.csv", DataFrame)
+#raw_MLE_high_para = CSV.read("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/para_2228_high_20221123.csv", DataFrame)
 
 print(raw_MLE_para)
 
@@ -660,7 +660,7 @@ mean(DataFrame(results.chain,:auto)[1,:])
 chain_df = DataFrame(results.chain,:auto)
 plot(Vector(chain_df[15,:]))
 plot(Vector(chain_df[25,:]))
-#CSV.write("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/chain_2228_20221123.csv", chain_df)
+#CSV.write("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/chain_2208_20221123.csv", chain_df)
 
 print(mean(Matrix(chain_df), dims = 2))
 μ_chain_df = mean(Matrix(chain_df), dims = 2)

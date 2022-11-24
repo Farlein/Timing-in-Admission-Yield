@@ -60,12 +60,15 @@ Results
 
 
 n_Period = 8
-n_var = 19
+n_var = 16
 n_σ = 2
 
 raw_chain = raw_chain_2208
-raw_chain = raw_chain_2218
-raw_chain = raw_chain_2228
+#raw_chain = raw_chain_2218
+#raw_chain = raw_chain_2228
+
+var_name = ["β_FinAid", "β_Pell", "β_efc", "β_home", "β_Gender", "β_ASIAN", "β_BLACK", "β_HISPA", "β_WHITE", "β_Multi",
+           "β_Pros_Event", "β_Admit_Honor", "β_Diff_Major", "β_CampusTour", "β_DecisionDay","β_Delay_Review"]
 
 ```
 whether variables are important
@@ -103,8 +106,8 @@ end
 #intval_df = DataFrame(hcat(1:(n_var+1),intval_mtx), :auto)
 β_tupl_df = DataFrame(hcat(1:(n_var+1),β_tupl), :auto)
 p_star_df = DataFrame(hcat(1:(n_var+1),p_star_mtx), :auto)
-#CSV.write("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/tupl_df_2228_20221107.csv", β_tupl_df)
-#CSV.write("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/p_star_df_2228_20221107.csv", p_star_df)
+#CSV.write("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/tupl_df_2228_20221124.csv", β_tupl_df)
+#CSV.write("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/p_star_df_2228_20221124.csv", p_star_df)
 
 ###CSV.write("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/intval_df_2208_20221107.csv", intval_df)
 
@@ -141,7 +144,7 @@ end
 
 findmax(Comp_mtx, dims=2)[1]
 Comp_df = DataFrame(hcat(1:(n_var+1), findmax(p_star_mtx, dims=2)[1], findmax(Comp_mtx, dims=2)[1], Comp_mtx), :auto)
-#CSV.write("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/Comp_df_2228_20221107.csv", Comp_df)
+#CSV.write("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/Comp_df_2208_20221123.csv", Comp_df)
 
 ###CSV.write("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/Comp_intval_df_2208_20221101.csv", Comp_intval_df)
 ###CSV.write("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/z_df_2208_20221101.csv", z_df)
@@ -210,8 +213,6 @@ display(boxplot(["1" "2" "3" "4" "5" "6" "7" "8"], plot_mtx
 
 raw_chain = raw_chain_2228
 
-var_name = ["β_FinAid", "β_Pell", "β_efc", "β_home", "β_Gender", "β_ASIAN", "β_BLACK", "β_HISPA", "β_WHITE", "β_Multi",
-           "β_Pros_Event", "β_Admit_Honor", "β_Diff_Major", "β_CampusTour", "β_DecisionDay","β_Delay_Review"]
 
 for i in 1:n_var
     plot_mtx = ones(1000, n_Period)
@@ -238,14 +239,9 @@ boxplot([0.8, 1.8, 2.8, 3.8, 4.8, 5.8, 6.8, 7.8], vec(plot_mtx_1)
             , xaxis="Period", yaxis="Baseline", label="2020", bar_width = 0.2, seriescolor=:gray50)
 boxplot!([1, 2, 3, 4, 5, 6, 7, 8], vec(plot_mtx_2)
             , xaxis="Period", yaxis="Baseline", label="2021", bar_width = 0.2, seriescolor=:gray75)            
-boxplot!([1.2, 2.2, 3.2, 4.2, 5.2, 6.2, 7.2, 8.2], vec(plot_mtx_3)
+display(boxplot!([1.2, 2.2, 3.2, 4.2, 5.2, 6.2, 7.2, 8.2], vec(plot_mtx_3)
             , xaxis="Period", yaxis="Baseline", label="2022", bar_width = 0.2, seriescolor=:gray100
-            , legend=:topleft, xticks=0:1:9)    
-
-
-            
-var_name = ["β_Admit", "β_home_distance", "β_Admit_Honor", "β_Diff_Major", "β_Gender", "β_inst_grant", "β_loan", "β_fed_efc", "β_Pell", 
-"β_ASIAN", "β_BLACK", "β_HISPA", "β_WHITE", "β_Multi", "β_Postcard", "β_Pros_Event", "β_CampusTour", "β_DecisionDay", "β_Delay_Review"]
+            , legend=:topleft, xticks=0:1:9)  )
 
 
 for i in 1:n_var
