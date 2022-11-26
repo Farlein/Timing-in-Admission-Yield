@@ -263,3 +263,76 @@ for i in 1:n_var
             , legend=:outertopright, xticks=0:1:9) )
 
 end
+
+```
+Figure 1
+```
+
+plot_mtx_1 = ones(n_Period, 1000)
+plot_mtx_2 = ones(n_Period, 1000)
+plot_mtx_3 = ones(n_Period, 1000)
+for j in 1:n_Period
+    plot_mtx_1[j,:] = vec(Matrix(raw_chain_2208[(j):(j),:]))
+    plot_mtx_2[j,:] = vec(Matrix(raw_chain_2218[(j):(j),:]))
+    plot_mtx_3[j,:] = vec(Matrix(raw_chain_2228[(j):(j),:]))
+end
+boxplot([0.8, 1.8, 2.8, 3.8, 4.8, 5.8, 6.8, 7.8], vec(plot_mtx_1)
+            , xaxis="Period", yaxis="Baseline", label="2020", bar_width = 0.2, seriescolor=:gray50)
+boxplot!([1, 2, 3, 4, 5, 6, 7, 8], vec(plot_mtx_2)
+            , xaxis="Period", yaxis="Baseline", label="2021", bar_width = 0.2, seriescolor=:gray75)            
+plot_1 = boxplot!([1.2, 2.2, 3.2, 4.2, 5.2, 6.2, 7.2, 8.2], vec(plot_mtx_3)
+            , xaxis="Period", yaxis="Baseline", label="2022", bar_width = 0.2, seriescolor=:gray100
+            , legend=:topleft, xticks=0:1:9, size=(600,400))  
+
+var_num = 1
+plot_mtx_1 = ones(n_Period, 1000)
+plot_mtx_2 = ones(n_Period, 1000)
+plot_mtx_3 = ones(n_Period, 1000)
+for j in 1:n_Period
+    plot_mtx_1[j,:] = vec(Matrix(raw_chain_2208[(var_num*n_Period+j):(var_num*n_Period+j),:]))
+    plot_mtx_2[j,:] = vec(Matrix(raw_chain_2218[(var_num*n_Period+j):(var_num*n_Period+j),:]))
+    plot_mtx_3[j,:] = vec(Matrix(raw_chain_2228[(var_num*n_Period+j):(var_num*n_Period+j),:]))
+end
+boxplot([0.8, 1.8, 2.8, 3.8, 4.8, 5.8, 6.8, 7.8], vec(plot_mtx_1)
+            , xaxis="Period", yaxis="Financial Aid", label="2020", bar_width = 0.2, seriescolor=:gray50)
+boxplot!([1, 2, 3, 4, 5, 6, 7, 8], vec(plot_mtx_2)
+            , xaxis="Period", yaxis="Financial Aid", label="2021", bar_width = 0.2, seriescolor=:gray75)            
+plot_2 = boxplot!([1.2, 2.2, 3.2, 4.2, 5.2, 6.2, 7.2, 8.2], vec(plot_mtx_3)
+            , xaxis="Period", yaxis="Financial Aid", label="2022", bar_width = 0.2, seriescolor=:gray100
+            , legend=false, xticks=0:1:9, size=(1200,400))  
+
+var_num = 5
+plot_mtx_1 = ones(n_Period, 1000)
+plot_mtx_2 = ones(n_Period, 1000)
+plot_mtx_3 = ones(n_Period, 1000)
+for j in 1:n_Period
+    plot_mtx_1[j,:] = vec(Matrix(raw_chain_2208[(var_num*n_Period+j):(var_num*n_Period+j),:]))
+    plot_mtx_2[j,:] = vec(Matrix(raw_chain_2218[(var_num*n_Period+j):(var_num*n_Period+j),:]))
+    plot_mtx_3[j,:] = vec(Matrix(raw_chain_2228[(var_num*n_Period+j):(var_num*n_Period+j),:]))
+end
+boxplot([0.8, 1.8, 2.8, 3.8, 4.8, 5.8, 6.8, 7.8], vec(plot_mtx_1)
+            , xaxis="Period", yaxis="Gender", label="2020", bar_width = 0.2, seriescolor=:gray50)
+boxplot!([1, 2, 3, 4, 5, 6, 7, 8], vec(plot_mtx_2)
+            , xaxis="Period", yaxis="Gender", label="2021", bar_width = 0.2, seriescolor=:gray75)            
+plot_3 = boxplot!([1.2, 2.2, 3.2, 4.2, 5.2, 6.2, 7.2, 8.2], vec(plot_mtx_3)
+            , xaxis="Period", yaxis="Gender", label="2022", bar_width = 0.2, seriescolor=:gray100
+            , legend=false, xticks=0:1:9, size=(600,400)) 
+
+var_num = 15
+plot_mtx_1 = ones(n_Period, 1000)
+plot_mtx_2 = ones(n_Period, 1000)
+plot_mtx_3 = ones(n_Period, 1000)
+for j in 1:n_Period
+    plot_mtx_1[j,:] = vec(Matrix(raw_chain_2208[(var_num*n_Period+j):(var_num*n_Period+j),:]))
+    plot_mtx_2[j,:] = vec(Matrix(raw_chain_2218[(var_num*n_Period+j):(var_num*n_Period+j),:]))
+    plot_mtx_3[j,:] = vec(Matrix(raw_chain_2228[(var_num*n_Period+j):(var_num*n_Period+j),:]))
+end
+boxplot([0.8, 1.8, 2.8, 3.8, 4.8, 5.8, 6.8, 7.8], vec(plot_mtx_1)
+            , xaxis="Period", yaxis="Decision Day", label="2020", bar_width = 0.2, seriescolor=:gray50)
+boxplot!([1, 2, 3, 4, 5, 6, 7, 8], vec(plot_mtx_2)
+            , xaxis="Period", yaxis="Decision Day", label="2021", bar_width = 0.2, seriescolor=:gray75)            
+plot_4 = boxplot!([1.2, 2.2, 3.2, 4.2, 5.2, 6.2, 7.2, 8.2], vec(plot_mtx_3)
+            , xaxis="Period", yaxis="Decision Day", label="2022", bar_width = 0.2, seriescolor=:gray100
+            , legend=false, xticks=0:1:9, size=(600,400)) 
+
+plot(plot_1,plot_2,plot_3,plot_4,layout = (2, 2))
