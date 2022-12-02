@@ -18,15 +18,16 @@ using DataFrames
 
 using FreqTables, StatsBase
 
-using HypothesisTests
+#using HypothesisTests
 
+using Statistics
 ```
 Load raw data
 ```
 
-raw = CSV.read("C:/Users/chuanc/University of Delaware - o365/Team-IRE-Staff Shares - chuanc - chuanc/Project/02_Analytical/20200102 ADM_Yield/Data/for_julia_2208_20220816.csv", DataFrame)
-raw = CSV.read("C:/Users/chuanc/University of Delaware - o365/Team-IRE-Staff Shares - chuanc - chuanc/Project/02_Analytical/20200102 ADM_Yield/Data/for_julia_2218_20220816.csv", DataFrame)
-raw = CSV.read("C:/Users/chuanc/University of Delaware - o365/Team-IRE-Staff Shares - chuanc - chuanc/Project/02_Analytical/20200102 ADM_Yield/Data/for_julia_2228_20220816.csv", DataFrame)
+raw_2208 = CSV.read("C:/Users/chuanc/University of Delaware - o365/Team-IRE-Staff Shares - chuanc - chuanc/Project/02_Analytical/20200102 ADM_Yield/Data/for_julia_2208_20221123.csv", DataFrame)
+raw_2218 = CSV.read("C:/Users/chuanc/University of Delaware - o365/Team-IRE-Staff Shares - chuanc - chuanc/Project/02_Analytical/20200102 ADM_Yield/Data/for_julia_2218_20221123.csv", DataFrame)
+raw_2228 = CSV.read("C:/Users/chuanc/University of Delaware - o365/Team-IRE-Staff Shares - chuanc - chuanc/Project/02_Analytical/20200102 ADM_Yield/Data/for_julia_2228_20221123.csv", DataFrame)
 
 raw_chain_2208 = CSV.read("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/chain_2208_20221123.csv", DataFrame)
 raw_chain_2218 = CSV.read("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/chain_2218_20221123.csv", DataFrame)
@@ -35,16 +36,75 @@ raw_chain_2228 = CSV.read("H:/My Drive/FSAN/5_Adm Yield Proj/Temp results/chain_
 
 
 
-hcat(1:ncol(raw), names(raw))
+```
+Data and Variables
+```
+print(hcat(1:ncol(raw_2208), names(raw_2208)))
+unique(raw_2208[raw_2208.Resid_Ind .==0 ,:].Student_ID)
+unique(raw_2218[raw_2218.Resid_Ind .==0 ,:].Student_ID)
+unique(raw_2228[raw_2228.Resid_Ind .==0 ,:].Student_ID)
 
+# non-resident
+18450+20619+21216
 
 ```
 Table 1
 ```
-freqtable(raw, :Period)
+freqtable(raw_2208[raw_2208.Resid_Ind .==0 ,:], :Period)
 
-freqtable(raw, :Period, :Dpst_Ind)
+freqtable(raw_2208[raw_2208.Resid_Ind .==0 ,:], :Period, :Dpst_Ind)
+freqtable(raw_2218[raw_2218.Resid_Ind .==0 ,:], :Period, :Dpst_Ind)
+freqtable(raw_2228[raw_2228.Resid_Ind .==0 ,:], :Period, :Dpst_Ind)
 
+```
+Table 2
+```
+total_dpst = sum(raw_2208[raw_2208.Resid_Ind .==0 ,:].Dpst_Ind)+sum(raw_2218[raw_2218.Resid_Ind .==0 ,:].Dpst_Ind)+sum(raw_2228[raw_2228.Resid_Ind .==0 ,:].Dpst_Ind)
+total_obs = length(unique(raw_2208[raw_2208.Resid_Ind .==0 ,:].Student_ID)) + length(unique(raw_2218[raw_2218.Resid_Ind .==0 ,:].Student_ID)) + length(unique(raw_2228[raw_2228.Resid_Ind .==0 ,:].Student_ID))
+dpst_pct = total_dpst/total_obs
+
+for i in 1:nrow(raw_2208)
+    if ismissing(raw_2208.FinAid_Rate[i])
+        raw_2208.FinAid_Rate[i] = 0
+    end
+end
+
+for i in 1:nrow(raw_2218)
+    if ismissing(raw_2218.FinAid_Rate[i])
+        raw_2218.FinAid_Rate[i] = 0
+    end
+end
+
+for i in 1:nrow(raw_2228)
+    if ismissing(raw_2228.FinAid_Rate[i])
+        raw_2228.FinAid_Rate[i] = 0
+    end
+end
+
+var_list = [:FinAid_Rate,:fed_efc_rate, :Pell_Ind
+                , :home_distance, :Gender_Ind
+                , :Eth_BLACK_Ind, :Eth_ASIAN_Ind, :Eth_HISPA_Ind, :Eth_WHITE_Ind, :Eth_Multi_Ind
+                , :Pros_Event_Ind, :Admit_Honor_Ind, :Diff_Major_Ind, :CampusTour_Ever_Ind, :DecisionDay_Ever_Ind, :Delay_Review_Ind]
+
+gdf = groupby(raw_2208[raw_2208.Resid_Ind .==0 ,:], :Student_ID)
+FinAid_1 = combine(gdf, var_list .=> mean; renamecols=false)
+gdf = groupby(raw_2218[raw_2218.Resid_Ind .==0 ,:], :Student_ID)
+FinAid_2 = combine(gdf, var_list .=> mean; renamecols=false)
+gdf = groupby(raw_2228[raw_2228.Resid_Ind .==0 ,:], :Student_ID)
+FinAid_3 = combine(gdf, var_list .=> mean; renamecols=false)
+
+FinAid = vcat(FinAid_1,FinAid_2,FinAid_3)
+
+mean(FinAid.FinAid_Rate)
+std(FinAid.FinAid_Rate)
+
+mean(FinAid.fed_efc_rate)
+std(FinAid.fed_efc_rate)
+
+println(round.(mean(Matrix(FinAid), dims=1); digits=3))
+println(round.(sum(Matrix(FinAid), dims=1); digits=3))
+
+std(FinAid.home_distance)
 ```
 Table 3
 ```
