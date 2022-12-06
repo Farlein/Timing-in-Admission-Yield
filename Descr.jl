@@ -174,11 +174,38 @@ p_star_df = DataFrame(hcat(1:(n_var+1),p_star_mtx), :auto)
 findmax(p_star_mtx, dims=2)[1]
 
 
-### Baseline
+### 2020
+
 β_test = -5.93-(-7.47)
 θ_test = 0.05
 1-exp(exp(β_test)log(1-θ_test))
 
+#Baseline
+exp(-5.82-(-8.05))
+
+# Gender
+exp(-0.31)
+exp(0.15)
+
+# FinAid
+exp(-0.47*0.1)
+
+# Pell
+exp(0.37)
+
+### 2021
+#Baseline
+exp(-5.94-(-8.21))
+
+# Decision Day
+exp(1.36)
+exp(0.93)
+exp(1.45)
+exp(1.55)
+
+# FinAid
+exp(1.7*0.1)
+exp(exp(1.7*0.1)*log(1-646/18257))
 ```
 whether a variable has time-varying effect
 ```
