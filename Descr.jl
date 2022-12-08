@@ -205,7 +205,20 @@ exp(1.55)
 
 # FinAid
 exp(1.7*0.1)
-exp(exp(1.7*0.1)*log(1-646/18257))
+1- exp(exp(1.7*0.1)*log(1-0.15))
+
+### 2022
+#Baseline
+exp(-5.48-(-9.79))
+exp(0.62*0.1)
+1- exp(exp(0.62*0.1)*log(1-0.15))
+
+### Three years together
+#Baseline
+exp(-5.98-(-7.14))
+exp(-6.74-(-7.51))
+exp(-8.24-(-9.79))
+
 ```
 whether a variable has time-varying effect
 ```
